@@ -1,0 +1,23 @@
+{
+  "name": "awedhyan",
+  "description": "this is package.json for awedhyan project",
+  "main": "index.js",
+  "authors": [
+    "Rupesh Singh"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/awecode/awedhyan",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "static/public/plugins",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "bootstrap": "^3.3.7",
+//    "react": "^15.4.2",
+    "font-awesome": "fontawesome#^4.7.0"
+  }
+}
