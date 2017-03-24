@@ -93,3 +93,4 @@ local_Settings.py
 
 node_modules/
 app/static/public/plugins/
+./idea/
