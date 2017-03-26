@@ -14,8 +14,8 @@ from django import template
 from django.contrib.auth.models import Group
 from django.template.base import FilterExpression
 from django.template.loader import get_template
+from django.conf import settings
 
-from awedhyan import settings
 
 register = Library()
 

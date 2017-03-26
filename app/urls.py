@@ -32,7 +32,7 @@ router.register(r'chapterquestion', ChapterQuestionViewSet, base_name='chapterqu
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # TODO below namespace='aadhyan' to namespace='academy' and all 'aadhan' namespace used
-    url(r'^aadhyan/', include(academy_urls, namespace='aadhyan')),
+    url(r'^academy/', include(academy_urls, namespace='aadhyan')),
     url(r'^users/', include(users_urls)),
 
 ]
