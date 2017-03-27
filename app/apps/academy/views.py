@@ -4,7 +4,8 @@ from django.views.generic import ListView
 
 from .serializers import QuestionSerializer
 from app.utils.mixins import DeleteView, UpdateView, CreateView, LoginRequiredMixin
-from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm
+from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm, \
+    QuestionForm, OptionForm
 from .models import BoardOrUniversity, Faculty, Program, ProgramLevel, Institute, Course, ChapterPage
 
 from django.views.generic import TemplateView
@@ -216,6 +217,10 @@ class ChapterQuestion(TemplateView):
 
         queryset = ChapterPage.objects.get(id=chapter_id).questions.all()
         serializer = QuestionSerializer(queryset, many=True)
-        context['initial_data'] = serializer.data
-        context['chapter_id'] = chapter_id
+        context['initial_data'] = {'questions': serializer.data, 'chapter_id': chapter_id}
+        context['forms'] = {
+            'question_form': QuestionForm(),
+            'choice_form': OptionForm()
+        }
+
         return context

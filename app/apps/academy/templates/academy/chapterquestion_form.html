@@ -5,16 +5,49 @@
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_js %}
-    <script>
-        var initialData = {{ initial_data| jsonify }};
-        var chapter_id = {{ chapter_id| jsonify }};
-    </script>
-<script type="text/javascript" src="{% static 'public/aadhyan/js/chapterquestion_add.bundle.js' %}"></script>
+<script>
+
+
+    $(document).ready(function () {
+        var initialData = {{ initial_data | jsonify }};
+        vm = new ChapterQuestion(initialData.chapter_id);
+        ko.applyBindings(vm);
+//        if (initialData.questions) {
+//            var mapping = {
+//                'entry_rows': {
+//                    create: function (options) {
+//                        var entry_row = ko.mapping.fromJS(options.data, {copy: []}, new PaymentEntryRow(ko_data.emp_options.slice(0)));
+//                        // if (typeof(options.parent.paid_from_date_input()) == 'undefined') {
+//                        //     options.parent.paid_from_date_input(options.data.paid_from_date);
+//                        //     options.parent.paid_to_date_input(options.data.paid_to_date);
+//                        // }
+//                        return entry_row;
+//                    }
+//                },
+//                // 'branch': {
+//                //     create: function(options){
+//                //         console.log(options.data)
+//                //         if(options.data == null){
+//                //             return 'ALL'
+//                //         }
+//                //         return options.data
+//                //     }
+//                // }
+//            };
+//            ko.mapping.fromJS(ko_data.ctx_data, mapping, vm);
+//
+//        }
+    });
+</script>
+<script type="text/javascript" src="{% static 'public/plugins/knockout/dist/js/knockout.js' %}"></script>
+<script type="text/javascript" src="{% static 'public/plugins/knockout-mapping/knockout.mapping.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-
-<div id="chapter-questions">
-
-</div>
+<!-- ko foreach: questions -->
+    {{ forms.question_form }}
+    <!-- ko foreach: choices -->
+    {{ forms.choice_form }}
+    <!-- /ko -->
+<!-- /ko -->
 {% endblock %}

@@ -7,7 +7,7 @@ from .models import Test, Question
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        fields = ('id', 'detail', 'question', 'is_correct')
+        fields = ('id', 'detail', 'is_correct')
 
 
 class QuestionSerializer(serializers.ModelSerializer):

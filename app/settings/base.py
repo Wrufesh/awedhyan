@@ -133,3 +133,5 @@ MEDIA_ROOT = os.path.join(PROJECT_DIR, 'static/media')
 
 # Abstrat User
 AUTH_USER_MODEL = 'users.User'
+
+EL_PAGINATION_PER_PAGE = 1

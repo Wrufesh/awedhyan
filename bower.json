@@ -18,6 +18,8 @@
     "jquery": "^3.1.1",
     "bootstrap": "^3.3.7",
     "font-awesome": "fontawesome#^4.7.0",
-    "jsutil": "awecode-jsutil#*"
+    "jsutil": "awecode-jsutil#*",
+    "knockout": "^3.4.2",
+    "knockout-mapping": "^2.4.1"
   }
 }
