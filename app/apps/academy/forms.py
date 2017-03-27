@@ -77,10 +77,10 @@ class QuestionForm(HTML5BootstrapModelForm):
         # 'detail', 'image', 'true_false_answer', 'type', 'choices'
         model = Question
         fields = ('detail', 'image', 'true_false_answer', 'type')
-
         widgets = {
             'detail': forms.TextInput(attrs={'data-bind': 'value: detail'}),
             'image': forms.ClearableFileInput(attrs={'data-bind': 'value: image'}),
-            'true_false_answer': forms.CheckboxInput(attrs={'data-bind' : 'checked: true_false_answer'}),
-            'type': forms.Select(attrs={'data-bind': 'value: type'})
+            'type': forms.Select(attrs={'data-bind': 'value: type'}),
+            'true_false_answer': forms.CheckboxInput(attrs={'data-bind': 'checked: true_false_answer, visible: type() == "TRUE/FALSE"'})
         }
+

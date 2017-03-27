@@ -20,6 +20,7 @@
     "font-awesome": "fontawesome#^4.7.0",
     "jsutil": "awecode-jsutil#*",
     "knockout": "^3.4.2",
-    "knockout-mapping": "^2.4.1"
+    "knockout-mapping": "^2.4.1",
+    "material-design-lite": "^1.3.0"
   }
 }

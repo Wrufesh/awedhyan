@@ -16,14 +16,22 @@ function Question(){
     self.image = ko.observable();
     self.true_false_answer = ko.observable();
     self.type = ko.observable();
-    self.choices = ko.observableArray([new Choice()]);
+    self.choices = ko.observableArray();
 
     self.type.subscribe(function(){
-        console.log('Question Type changed')
+        if(self.type() != 'OBJECTIVE'){
+            self.choices([]);
+        }else if(self.type() == 'OBJECTIVE'){
+            self.choices.push(new Choice())
+        }
+
+        if(self.type() != 'TRUE/FALSE'){
+            self.true_false_answer(false);
+        }
     });
 
     self.add_choice = function(){
-        console.log('Choice Added');
+        self.choices.push(new Choice())
     };
 }
 
@@ -33,7 +41,7 @@ function ChapterQuestion(chapter_id){
     self.questions = ko.observableArray([new Question()]);
 
     self.add_question = function(){
-        console.log('Question Added')
+        self.questions.push(new Question());
     };
 
     self.save = function(){
