@@ -35,26 +35,26 @@ class Faculty(models.Model):
         return '%s[%s]' % (self.name, self.board_or_university)
 
 
-class Program(models.Model):
-    name = models.CharField(max_length=150)
-    faculty = models.ForeignKey(
-        Faculty,
-        related_name='educational_programs'
-    )
-
-    def __str__(self):
-        return '%s[%s]' % (self.name, self.faculty)
-
-
 class ProgramLevel(models.Model):
     name = models.CharField(max_length=150)
     program = models.ForeignKey(
-        Program,
-        related_name='educational_program_levels'
+        Faculty,
+        related_name='faculty_program_levels'
     )
 
     def __str__(self):
         return '%s[%s]' % (self.name, self.program)
+
+
+class Program(models.Model):
+    name = models.CharField(max_length=150)
+    faculty = models.ForeignKey(
+        ProgramLevel,
+        related_name='program_level_programs'
+    )
+
+    def __str__(self):
+        return '%s[%s]' % (self.name, self.faculty)
 
 
 # End of can only be added by superuser
@@ -63,7 +63,7 @@ class ProgramLevel(models.Model):
 class Course(models.Model):
     name = models.CharField(max_length=100)
     level = models.ForeignKey(
-        ProgramLevel,
+        Program,
         related_name='education_program_courses',
         null=True,
         blank=True,

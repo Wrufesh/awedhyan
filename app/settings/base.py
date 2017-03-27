@@ -40,7 +40,9 @@ INSTALLED_APPS = [
 
 INSTALLED_APPS += [
     'app.apps.academy',
-    'app.apps.users'
+    'app.apps.users',
+    'el_pagination',
+    'webstack_django_sorting'
 ]
 
 MIDDLEWARE = [
@@ -64,6 +66,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                # 'django.core.context_processors.request',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',

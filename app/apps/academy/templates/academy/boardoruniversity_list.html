@@ -11,11 +11,11 @@
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        {% load pagination_tags %}
+        {% load el_pagination_tags %}
         {% load sorting_tags %}
 
-        {% autosort object_list as sorted_objects %}
-        {% autopaginate sorted_objects 25 as paginated_objects %}
+        {% paginate object_list %}
+        {% autosort object_list %}
 
 
 
@@ -24,16 +24,16 @@
                 <th>{% anchor name _('Board Name') %}</th>
             </thead>
             <tbody>
-            {% for object in paginated_objects %}
+            {% for object in object_list %}
             <tr>
                 <td>
                     <a href="{% url 'aadhyan:board_edit' object.pk %}">{{ object }}</a>
                 </td>
             </tr>
             {% endfor %}
+            {% show_pages %}
             </tbody>
         </table>
-        {% paginate %}
     </div>
 </div>
 
