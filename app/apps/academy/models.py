@@ -62,7 +62,7 @@ class Program(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=100)
-    level = models.ForeignKey(
+    program = models.ForeignKey(
         Program,
         related_name='education_program_courses',
         null=True,
@@ -79,7 +79,7 @@ class Course(models.Model):
     )
 
     def __str__(self):
-        return '%s-%s-%s' % (self.name, self.level, self.institute)
+        return '%s-%s-%s' % (self.name, self.program, self.institute)
 
 
 class Question(models.Model):

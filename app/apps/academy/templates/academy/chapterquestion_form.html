@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load jsonify %}
 {% load static %}
+{% load filters %}
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -39,8 +39,9 @@
 //        }
     });
 </script>
-<script type="text/javascript" src="{% static 'public/plugins/knockout/dist/js/knockout.js' %}"></script>
+<script type="text/javascript" src="{% static 'public/plugins/knockout/dist/knockout.js' %}"></script>
 <script type="text/javascript" src="{% static 'public/plugins/knockout-mapping/knockout.mapping.js' %}"></script>
+<script type="text/javascript" src="{% static 'public/academy/js/chapterquestion_form.js' %}"></script>
 {% endblock %}
 
 {% block content %}
