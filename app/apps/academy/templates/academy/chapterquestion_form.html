@@ -6,13 +6,13 @@
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_js %}
-<script>
+    <script>
 
 
-    $(document).ready(function () {
-        var initialData = {{ initial_data | jsonify }};
-        vm = new ChapterQuestion(initialData.chapter_id);
-        ko.applyBindings(vm);
+        $(document).ready(function () {
+            var initialData = {{ initial_data | jsonify }};
+            vm = new ChapterQuestion(initialData.chapter_id);
+            ko.applyBindings(vm);
 //        if (initialData.questions) {
 //            var mapping = {
 //                'entry_rows': {
@@ -38,23 +38,63 @@
 //            ko.mapping.fromJS(ko_data.ctx_data, mapping, vm);
 //
 //        }
-    });
-</script>
-<script type="text/javascript" src="{% static 'public/plugins/knockout/dist/knockout.js' %}"></script>
-<script type="text/javascript" src="{% static 'public/plugins/knockout-mapping/knockout.mapping.js' %}"></script>
-<script type="text/javascript" src="{% static 'public/academy/js/chapterquestion_form.js' %}"></script>
+        });
+    </script>
+    <script type="text/javascript" src="{% static 'public/plugins/knockout/dist/knockout.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/plugins/knockout-mapping/knockout.mapping.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/plugins/knockout-bindings/bindings.js' %}"></script>
+
+    <script type="text/javascript"
+            src="{% static 'public/plugins/bootstrap-toggle/js/bootstrap-toggle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/academy/js/chapterquestion_form.js' %}"></script>
+{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'public/plugins/bootstrap-toggle/css/bootstrap-toggle.min.css' %}">
 {% endblock %}
 
 {% block content %}
-<form>
-    <!-- ko foreach: questions -->
-        {{ forms.question_form }}
-        <!-- ko foreach: choices -->
-            {{ forms.choice_form }}
+
+    <form>
+        <!-- ko foreach: questions -->
+        <div class="well">
+            <div class="row">
+                <div class="col-lg-12">
+                    <strong>{{ forms.question_form.detail.label }}</strong>
+                    {{ forms.question_form.detail }}
+                </div>
+                <div class="col-lg-6">
+                    <strong>{{ forms.question_form.image.label }}</strong>
+                    {{ forms.question_form.image }}
+                </div>
+                <div class="col-lg-6">
+                    <strong>{{ forms.question_form.type.label }}</strong>
+                    {{ forms.question_form.type }}
+                </div>
+                <div class="col-lg-12" data-bind="visible: type() == 'TRUE/FALSE'">
+                    <strong>{{ forms.question_form.true_false_answer.label }}</strong>
+                    {{ forms.question_form.true_false_answer }}
+                </div>
+                <div class="">
+                    <!-- ko foreach: choices -->
+                    <div class="col-lg-6">
+                        <div class="well">
+                            {{ forms.choice_form }}
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+
+                <div class="col-lg-12">
+
+                    <button data-bind="click: add_choice, visible: choices().length > 0"
+                            class="btn btn-primary">{% trans 'Add Choice' %}</button>
+                </div>
+
+            </div>
+        </div>
+
         <!-- /ko -->
-        <button data-bind="click: add_choice, visible: choices().length > 0" class="btn btn-primary">{% trans 'Add Choice' %}</button>
-    <!-- /ko -->
-    <button data-bind="click: add_question" class="btn btn-primary">{% trans 'Add Question' %}</button>
-</form>
+        <button data-bind="click: add_question" class="btn btn-primary">{% trans 'Add Question' %}</button>
+    </form>
 
 {% endblock %}
