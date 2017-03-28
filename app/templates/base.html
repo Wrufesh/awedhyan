@@ -13,9 +13,6 @@
 
         {# Global stylesheets #}
         <link rel="stylesheet" type="text/css" href="{% static 'public/plugins/bootstrap/dist/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'public/plugins/material-design-lite/material.min.css'%}">
-        <!--TODO make below stylesheet available locally-->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
@@ -39,8 +36,6 @@
         <script type="text/javascript" src="{% static 'public/plugins/jquery/dist/jquery.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'public/plugins/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 
-
-        <script src="{% static 'public/plugins/material-design-lite/material.min.js' %}"></script>
 
 
         {% block extra_js %}
