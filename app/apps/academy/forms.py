@@ -96,5 +96,5 @@ class QuestionForm(HTML5BootstrapModelForm):
             'image': forms.ClearableFileInput(attrs={'data-bind': 'value: image'}),
             'type': forms.Select(attrs={'data-bind': 'value: type'}),
             'true_false_answer': forms.CheckboxInput(
-                attrs={'data-bind': 'checked: true_false_answer, bstoggle: {"on": "Yes", "off": "No"}'})
+                attrs={'data-bind': 'checked: true_false_answer, bstoggle: {"on": "True", "off": "False"}'})
         }
