@@ -224,3 +224,6 @@ class ChapterQuestion(TemplateView):
         }
 
         return context
+
+    # def post(self, request):
+
