@@ -19,15 +19,17 @@ function Question(){
     self.choices = ko.observableArray();
 
     self.type.subscribe(function(){
-        if(self.type() != 'OBJECTIVE'){
+        console.log(self.type());
+        if(self.type() == 'TRUE/FALSE' || self.type() == 'ESSAY'){
+            self.true_false_answer(false);
             self.choices([]);
-        }else if(self.type() == 'OBJECTIVE'){
-            self.choices.push(new Choice())
+        }
+        if(self.type() == 'OBJECTIVE'){
+            self.choices.push(new Choice());
+            self.true_false_answer(false);
+            console.log(self.true_false_answer());
         }
 
-        if(self.type() != 'TRUE/FALSE'){
-            self.true_false_answer(false);
-        }
     });
 
     self.add_choice = function(){
@@ -45,7 +47,8 @@ function ChapterQuestion(chapter_id){
     };
 
     self.save = function(){
-        console.log('This is saved');
+        var payload = JSON.parse(ko.toJSON(self));
+        console.log(payload);
     };
 
 

@@ -1,0 +1,26 @@
+$default-btn-color: #333;
+$default-btn-bg-color: #fff;
+
+.btn-default {
+  color: $default-btn-color;
+  background-color: $default-btn-bg-color;
+  border-color: #ccc;
+}
+.btn-default:focus,
+.btn-default.focus {
+  color: $default-btn-color;
+  background-color: $default-btn-bg-color;
+  border-color: #8c8c8c;
+}
+.btn-default:hover {
+  color: $default-btn-color;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
