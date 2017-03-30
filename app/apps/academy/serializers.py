@@ -1,12 +1,12 @@
 from django.utils.regex_helper import Choice
 from rest_framework import serializers
 
-from .models import Test, Question
+from .models import Test, Question, Option
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Choice
+        model = Option
         fields = ('id', 'detail', 'is_correct')
 
 

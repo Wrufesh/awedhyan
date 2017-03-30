@@ -11,33 +11,32 @@
 
         $(document).ready(function () {
             var initialData = {{ initial_data | jsonify }};
+            console.log(initialData);
             vm = new ChapterQuestion(initialData.chapter_id);
             ko.applyBindings(vm);
-//        if (initialData.questions) {
-//            var mapping = {
-//                'entry_rows': {
-//                    create: function (options) {
-//                        var entry_row = ko.mapping.fromJS(options.data, {copy: []}, new PaymentEntryRow(ko_data.emp_options.slice(0)));
-//                        // if (typeof(options.parent.paid_from_date_input()) == 'undefined') {
-//                        //     options.parent.paid_from_date_input(options.data.paid_from_date);
-//                        //     options.parent.paid_to_date_input(options.data.paid_to_date);
-//                        // }
-//                        return entry_row;
-//                    }
-//                },
-//                // 'branch': {
-//                //     create: function(options){
-//                //         console.log(options.data)
-//                //         if(options.data == null){
-//                //             return 'ALL'
-//                //         }
-//                //         return options.data
-//                //     }
-//                // }
-//            };
-//            ko.mapping.fromJS(ko_data.ctx_data, mapping, vm);
-//
-//        }
+            if (initialData.questions) {
+                var mapping = {
+                    'questions': {
+                        create: function (options) {
+                            var question = ko.mapping.fromJS(options.data, {copy: []}, new Question());
+
+                            var choice_mapping = {
+                                'choices': {
+                                    create: function (options) {
+                                        var choice = ko.mapping(options.data, {}, new Choice());
+                                        return choice;
+                                    }
+                                }
+                            }
+
+                            return question;
+                        }
+                    }
+
+                };
+                ko.mapping.fromJS(initialData, mapping, vm);
+
+            }
         });
     </script>
     <script type="text/javascript" src="{% static 'public/plugins/knockout/dist/knockout.js' %}"></script>
@@ -65,7 +64,14 @@
         {% csrf_token %}
         <div class="">
             <!-- ko foreach: questions -->
-            <div class="card my-2 bg-faded">
+            <div class="card my-2 bg-faded" data-bind="css: {'bg-info': errors().length > 0}">
+                <div class="errorlist">
+                        <ul class="list-group">
+                            <!-- ko foreach: errors -->
+                            <li class="list-group-item list-group-item-danger" data-bind="text: $data"></li>
+                            <!-- /ko -->
+                        </ul>
+                    </div>
                 <div class="row card-block">
                     <div class="col-12">
                         {{ forms.question_form.detail.label }}
@@ -95,7 +101,8 @@
                                     {{ forms.choice_form.is_correct.label }}
                                     {{ forms.choice_form.is_correct }}
 
-                                    <button type="button" data-bind="click: $parent.remove_choice" class="btn btn-outline-danger btn-sm float-right">
+                                    <button type="button" data-bind="click: $parent.remove_choice"
+                                            class="btn btn-outline-danger btn-sm float-right">
                                         {% trans 'Remove Choice' %}
                                     </button>
                                 </div>
@@ -106,11 +113,11 @@
                     <div class="col-12">
                         <button data-bind="click: add_choice, visible: choices().length > 0"
                                 class="btn btn-primary btn-sm">{% trans 'Add Choice' %}</button>
-                        <button type="button"  data-bind="click: $parent.remove_question" class="btn btn-danger btn-sm float-right">
+                        <button type="button" data-bind="click: $parent.remove_question"
+                                class="btn btn-danger btn-sm float-right">
                             {% trans 'Remove Question' %}
                         </button>
                     </div>
-
                 </div>
 
 

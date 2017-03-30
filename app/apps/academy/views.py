@@ -234,7 +234,7 @@ class ChapterQuestion(TemplateView):
         chapter = ChapterPage.objects.get(id=chapter_id)
         params = json.loads(request.body.decode())
 
-        while transaction.atomic():
+        with transaction.atomic():
 
             Question.objects.filter(id__in=params.get('questions_to_delete')).delete()
 
