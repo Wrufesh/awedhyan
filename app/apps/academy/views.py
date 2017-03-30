@@ -1,4 +1,8 @@
+import json
+
 from django.contrib.auth import get_user_model
+from django.db import transaction
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 
@@ -6,7 +10,7 @@ from .serializers import QuestionSerializer
 from app.utils.mixins import DeleteView, UpdateView, CreateView, LoginRequiredMixin
 from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm, \
     QuestionForm, OptionForm
-from .models import BoardOrUniversity, Faculty, Program, ProgramLevel, Institute, Course, ChapterPage
+from .models import BoardOrUniversity, Faculty, Program, ProgramLevel, Institute, Course, ChapterPage, Question, Option
 
 from django.views.generic import TemplateView
 
@@ -225,5 +229,41 @@ class ChapterQuestion(TemplateView):
 
         return context
 
-    # def post(self, request):
+    def post(self, request, *args, **kwargs):
+        chapter_id = self.kwargs.get('chapter_id')
+        chapter = ChapterPage.objects.get(id=chapter_id)
+        params = json.loads(request.body.decode())
+
+        while transaction.atomic():
+
+            Question.objects.filter(id__in=params.get('questions_to_delete')).delete()
+
+            for question in params.get('questions'):
+                if question.get('id'):
+                    question_obj = Question.objects.get(id=question.get('id'))
+                else:
+                    question_obj = Question()
+
+                question_obj.detail = question.get('detail')
+                question_obj.image = question.get('image')
+                question_obj.type = question.get('type')
+                question_obj.true_false_answer = question.get('true_false_answer')
+                question_obj.save()
+                chapter.questions.add(question_obj)
+
+                Option.objects.filter(id__in=question.get('choices_to_delete')).delete()
+
+                for option in question.get('choices'):
+                    if option.get('id'):
+                        option_obj = Option.objects.get(id=option.get('id'))
+                    else:
+                        option_obj = Option()
+                    option_obj.detail = option.get('detail')
+                    option_obj.is_correct = option.get('is_correct')
+                    option_obj.question = question_obj
+                    option_obj.save()
+        return JsonResponse({'success': True})
+
+
+
 

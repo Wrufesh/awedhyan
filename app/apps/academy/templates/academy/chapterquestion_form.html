@@ -46,16 +46,23 @@
 
     <script type="text/javascript"
             src="{% static 'public/plugins/bootstrap-toggle/js/bootstrap-toggle.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'public/plugins/blockUI/jquery.blockUI.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/plugins/toastr/toastr.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/plugins/jsutil/App.js' %}"></script>
     <script type="text/javascript" src="{% static 'public/academy/js/chapterquestion_form.js' %}"></script>
 {% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" type="text/css"
           href="{% static 'public/plugins/bootstrap-toggle/css/bootstrap-toggle.min.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'public/plugins/toastr/toastr.min.css' %}">
 {% endblock %}
 
 {% block content %}
 
-    <form>
+    <form data-bind="submit: save">
+        {% csrf_token %}
         <div class="">
             <!-- ko foreach: questions -->
             <div class="card my-2 bg-faded">
@@ -88,7 +95,7 @@
                                     {{ forms.choice_form.is_correct.label }}
                                     {{ forms.choice_form.is_correct }}
 
-                                    <button type="button" class="btn btn-outline-danger btn-sm float-right">
+                                    <button type="button" data-bind="click: $parent.remove_choice" class="btn btn-outline-danger btn-sm float-right">
                                         {% trans 'Remove Choice' %}
                                     </button>
                                 </div>
@@ -99,7 +106,7 @@
                     <div class="col-12">
                         <button data-bind="click: add_choice, visible: choices().length > 0"
                                 class="btn btn-primary btn-sm">{% trans 'Add Choice' %}</button>
-                        <button type="button" class="btn btn-danger btn-sm float-right">
+                        <button type="button"  data-bind="click: $parent.remove_question" class="btn btn-danger btn-sm float-right">
                             {% trans 'Remove Question' %}
                         </button>
                     </div>
@@ -110,7 +117,7 @@
             </div>
             <!-- /ko -->
             <button data-bind="click: add_question" class="btn btn-primary">{% trans 'Add Question' %}</button>
-            <button data-bind="click: save" class="btn btn-primary">{% trans 'Save' %}</button>
+            <input type="submit" value="Save" class="btn btn-primary">
         </div>
     </form>
 

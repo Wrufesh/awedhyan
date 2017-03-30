@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import pre_delete
 from django.utils.translation import ugettext as _
+
+from app.apps.academy.signal_receivers import delete_question_choice
 
 
 class Institute(models.Model):
@@ -90,12 +93,14 @@ class Question(models.Model):
     )
     detail = models.CharField(max_length=1000)
 
-    image = models.ImageField(upload_to='question/', height_field=None, width_field=None, max_length=100)
+    image = models.ImageField(upload_to='question/', height_field=None, width_field=None, max_length=100, null=True, blank=True)
 
     type = models.CharField(max_length=256, choices=type_choices)
 
     # The below field is present when the question type is True/False Type
     true_false_answer = models.BooleanField(default=False)
+
+pre_delete.connect(delete_question_choice, sender=Question)
 
 
 class EssayAnswer(models.Model):
