@@ -1,5 +1,6 @@
 import json
 
+import base64
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
@@ -8,11 +9,12 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 
-from .serializers import QuestionSerializer
+from .serializers import QuestionSerializer, TestSerializer
 from app.utils.mixins import DeleteView, UpdateView, CreateView, LoginRequiredMixin
 from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm, \
     QuestionForm, OptionForm
-from .models import BoardOrUniversity, Faculty, Program, ProgramLevel, Institute, Course, ChapterPage, Question, Option
+from .models import BoardOrUniversity, Faculty, Program, ProgramLevel, Institute, Course, ChapterPage, Question, Option, \
+    Test
 
 from django.views.generic import TemplateView
 
@@ -215,8 +217,6 @@ class ChapterDelete(ChapterView, DeleteView):
 
 
 def base64_content_file(data):
-    import base64
-    from django.core.files.base import ContentFile
     format, imgstr = data.split(';base64,')
     ext = format.split('/')[-1]
 
@@ -284,5 +284,21 @@ class ChapterQuestion(TemplateView, LoginRequiredMixin):
         return JsonResponse({'success': True})
 
 
+class TestCreateEditView(TemplateView, LoginRequiredMixin):
+    template_name = 'academy/test_form.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(TestCreateEditView, self).get_context_data(**kwargs)
+        test_id = self.kwargs.get('test_id')
 
+        if test_id:
+            test = Test.objects.get(id=test_id)
+            serializer = TestSerializer(test, many=False)
+            context['initial_data'] = serializer.data
+
+        context['forms'] = {
+            'question_form': QuestionForm(),
+            'choice_form': OptionForm()
+        }
+
+        return context

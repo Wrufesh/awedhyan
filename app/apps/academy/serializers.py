@@ -1,7 +1,7 @@
 from django.utils.regex_helper import Choice
 from rest_framework import serializers
 
-from .models import Test, Question, Option
+from .models import Test, Question, Option, TestQuestion
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -18,8 +18,15 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('id', 'detail', 'image', 'true_false_answer', 'type', 'choices')
 
 
+class TestQuestionSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer(many=False)
+    class Meta:
+        models = TestQuestion
+        fields = ('id', 'question', 'points')
+
+
 class TestSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
+    questions = TestQuestionSerializer(many=True)
 
     class Meta:
         model = Test

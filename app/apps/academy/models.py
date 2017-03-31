@@ -148,14 +148,19 @@ class ChapterPage(models.Model):
     def __str__(self):
         return '%s-%s' % (self.name, self.course)
 
+class TestQuestion(models.Model):
+    question = models.ForeignKey(Question, related_name='tests')
+    pionts = models.PositiveIntegerField()
+
 
 class Test(models.Model):
     name = models.CharField(max_length=250)
     course = models.ForeignKey(Course)
     pass_mark = models.PositiveIntegerField()
-    questions = models.ManyToManyField(Question)
+    questions = models.ManyToManyField(TestQuestion)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tests')
 
 
 class Option(models.Model):
