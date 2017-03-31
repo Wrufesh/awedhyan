@@ -93,7 +93,9 @@ class QuestionForm(HTML5BootstrapModelForm):
 
         widgets = {
             'detail': forms.TextInput(attrs={'data-bind': 'value: detail'}),
-            'image': forms.ClearableFileInput(attrs={'data-bind': 'value: image'}),
+            # 'image': forms.ClearableFileInput(attrs={
+            #     'data-bind': "fileInput: image, customFileInput: {buttonClass: 'btn btn-success',fileNameClass: 'disabled form-control'}",
+            #     'accept': 'image/*'}),
             'type': forms.Select(attrs={'data-bind': 'value: type'}),
             'true_false_answer': forms.CheckboxInput(
                 attrs={'data-bind': 'bsToggle: true_false_answer, bsToggleData: {"on": "True", "off": "False"}'})

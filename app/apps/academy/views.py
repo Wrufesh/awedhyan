@@ -1,6 +1,8 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
+from django.core.files.images import ImageFile
 from django.db import transaction
 from django.http import JsonResponse
 from django.urls import reverse_lazy
@@ -212,6 +214,18 @@ class ChapterDelete(ChapterView, DeleteView):
     pass
 
 
+def base64_content_file(data):
+    import base64
+    from django.core.files.base import ContentFile
+    format, imgstr = data.split(';base64,')
+    ext = format.split('/')[-1]
+
+    data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+    return data
+
+
+
+
 class ChapterQuestion(TemplateView):
     template_name = 'academy/chapterquestion_form.html'
 
@@ -232,6 +246,8 @@ class ChapterQuestion(TemplateView):
     def post(self, request, *args, **kwargs):
         chapter_id = self.kwargs.get('chapter_id')
         chapter = ChapterPage.objects.get(id=chapter_id)
+        # import ipdb
+        # ipdb.set_trace()
         params = json.loads(request.body.decode())
 
         with transaction.atomic():
@@ -245,7 +261,9 @@ class ChapterQuestion(TemplateView):
                     question_obj = Question()
 
                 question_obj.detail = question.get('detail')
-                question_obj.image = question.get('image')
+
+                if question.get('image').get('fileArray'):
+                    question_obj.image.save('blabla1.jpg', base64_content_file(question.get('image').get('dataURL')), save=False)
                 question_obj.type = question.get('type')
                 question_obj.true_false_answer = question.get('true_false_answer')
                 question_obj.save()

@@ -22,6 +22,7 @@
     "knockout-mapping": "^2.4.1",
     "knockout-bindings": "awecode-ko-custom-bindings#*",
     "bootstrap-toggle": "^2.2.2",
-    "bootstrap": "v4.0.0-alpha.6"
+    "bootstrap": "v4.0.0-alpha.6",
+    "knockout-file-bindings": "^1.1.2"
   }
 }

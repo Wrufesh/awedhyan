@@ -13,7 +13,10 @@ function Question() {
 
     self.id = ko.observable();
     self.detail = ko.observable();
-    self.image = ko.observable();
+    // self.image = ko.observable();
+    self.image = ko.observable({
+        dataURL: ko.observable()
+    });
     self.true_false_answer = ko.observable(false);
     self.type = ko.observable();
     self.choices = ko.observableArray();
@@ -90,7 +93,7 @@ function ChapterQuestion(chapter_id) {
                 if (has_no_correct_choice) {
                     valid = false;
                     question.errors.push('Atleast one correct choice needed.');
-                }else{
+                } else {
                     question.errors([]);
                 }
             }
@@ -102,7 +105,9 @@ function ChapterQuestion(chapter_id) {
     self.save = function () {
         if (self.validation()) {
             App.showProcessing();
-            var payload = JSON.parse(ko.toJSON(self));
+            // var payload = JSON.parse(ko.toJSON(self));
+            var payload = ko.toJSON(self);
+            debugger;
             var url = '/academy/chapterquestions/add/' + String(self.chapter_id()) + '/';
 
 
@@ -120,7 +125,7 @@ function ChapterQuestion(chapter_id) {
                 );
                 App.hideProcessing();
             };
-            App.remotePost(url, payload, defaultCallback, failureCallback);
+            App.remoteMultipartPost(url, payload, defaultCallback, failureCallback);
         }
 
 
