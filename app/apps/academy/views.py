@@ -224,7 +224,7 @@ def base64_content_file(data):
     return data
 
 
-class ChapterQuestion(TemplateView):
+class ChapterQuestion(TemplateView, LoginRequiredMixin):
     template_name = 'academy/chapterquestion_form.html'
 
     def get_context_data(self, **kwargs):
