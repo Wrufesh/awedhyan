@@ -31,7 +31,7 @@
         $(document).ready(function () {
             var initialData = {{ initial_data | jsonify }};
             console.log(initialData);
-            vm = new ChapterQuestion(initialData.chapter_id);
+            var vm = new ChapterQuestion(initialData.chapter_id);
             ko.applyBindings(vm);
             if (initialData.questions) {
                 var mapping = {

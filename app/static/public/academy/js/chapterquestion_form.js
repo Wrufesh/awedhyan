@@ -26,14 +26,12 @@ function Question() {
     self.choices_to_delete = ko.observableArray();
 
     self.type.subscribe(function () {
-        console.log(self.type());
         if (self.type() == 'TRUE/FALSE' || self.type() == 'ESSAY') {
             self.choices([]);
         }
         if (self.type() == 'OBJECTIVE') {
             self.choices.push(new Choice());
             self.true_false_answer(false);
-            console.log(self.true_false_answer());
         }
         if (self.type() == 'ESSAY') {
             self.true_false_answer(false);
@@ -105,9 +103,7 @@ function ChapterQuestion(chapter_id) {
     self.save = function () {
         if (self.validation()) {
             App.showProcessing();
-            // var payload = JSON.parse(ko.toJSON(self));
             var payload = ko.toJSON(self);
-            debugger;
             var url = '/academy/chapterquestions/add/' + String(self.chapter_id()) + '/';
 
 

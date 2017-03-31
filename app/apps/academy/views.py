@@ -224,8 +224,6 @@ def base64_content_file(data):
     return data
 
 
-
-
 class ChapterQuestion(TemplateView):
     template_name = 'academy/chapterquestion_form.html'
 
@@ -263,7 +261,10 @@ class ChapterQuestion(TemplateView):
                 question_obj.detail = question.get('detail')
 
                 if question.get('image').get('fileArray'):
-                    question_obj.image.save('blabla1.jpg', base64_content_file(question.get('image').get('dataURL')), save=False)
+                    question_obj.image.save(
+                        question.get('image').get('file').get('name'),
+                        base64_content_file(question.get('image').get('dataURL')),
+                        save=False)
                 question_obj.type = question.get('type')
                 question_obj.true_false_answer = question.get('true_false_answer')
                 question_obj.save()
