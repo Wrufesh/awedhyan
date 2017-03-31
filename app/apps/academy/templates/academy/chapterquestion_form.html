@@ -23,12 +23,12 @@
                                     }
                                 },
                                 'image': {
-                                    update: function(options){
-                                        if(!options.data){
+                                    update: function (options) {
+                                        if (!options.data) {
                                             return {
                                                 dataURL: ko.observable()
                                             }
-                                        }else{
+                                        } else {
                                             return {
                                                 dataURL: ko.observable(options.data)
                                             }
@@ -92,9 +92,11 @@
                         {{ forms.question_form.detail }}
                     </div>
                     <div class="col-12">
-                        {{ forms.question_form.image.label }}
-
-                        <div class="card-block" data-bind="fileDrag: image">
+                        <button class="btn btn-outline-info btn-sm my-2" type="button" data-toggle="collapse"
+                                data-target="#imageUpload" aria-expanded="false" aria-controls="imageUpload">
+                            {{ forms.question_form.image.label }}
+                        </button>
+                        <div id="imageUpload" class="collapse card-block" data-bind="fileDrag: image">
                             <div class="form-group row">
                                 <div class="col-6">
                                     <img style="height: 125px;" class="img-rounded  thumb"
@@ -105,7 +107,7 @@
                                 </div>
                                 <div class="col-6">
                                     <input type="file" data-bind="fileInput: image, customFileInput: {
-              buttonClass: 'btn btn-success',
+              buttonClass: 'btn btn-outline-success btn-sm',
               fileNameClass: 'disabled form-control'
             }" accept="image/*">
                                 </div>
@@ -118,7 +120,7 @@
                         {{ forms.question_form.type.label }}
                         {{ forms.question_form.type }}
                     </div>
-                    <div class="col-12" data-bind="visible: type() == 'TRUE/FALSE'">
+                    <div class="col-12 my-2" data-bind="visible: type() == 'TRUE/FALSE'">
                         {{ forms.question_form.true_false_answer.label }}
                         {{ forms.question_form.true_false_answer }}
                     </div>
@@ -130,12 +132,13 @@
                                     {{ forms.choice_form.detail.label }}
                                     {{ forms.choice_form.detail }}
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12 my-2">
                                     {{ forms.choice_form.is_correct.label }}
                                     {{ forms.choice_form.is_correct }}
-
+                                </div>
+                                <div class="col-12 my-2">
                                     <button type="button" data-bind="click: $parent.remove_choice"
-                                            class="btn btn-outline-danger btn-sm float-right">
+                                            class="btn btn-outline-danger btn-sm">
                                         {% trans 'Remove Choice' %}
                                     </button>
                                 </div>
