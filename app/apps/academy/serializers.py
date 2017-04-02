@@ -19,15 +19,30 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class TestQuestionSerializer(serializers.ModelSerializer):
-    question = QuestionSerializer(many=False)
+
     class Meta:
-        models = TestQuestion
+        model = TestQuestion
+        fields = ('id', 'question', 'chapter', 'points')
+
+
+class TestQuestionDetailSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer(many=False)
+
+    class Meta:
+        model = TestQuestion
         fields = ('id', 'question', 'points')
 
 
 class TestSerializer(serializers.ModelSerializer):
-    questions = TestQuestionSerializer(many=True)
+    non_chapter_questions = TestQuestionDetailSerializer(source='get_non_chapter_questions',many=True)
+    chapter_questions = TestQuestionSerializer(source='get_chapter_questions', many=True)
 
     class Meta:
         model = Test
-        fields = ('id', 'name', 'course', 'pass_mark', 'questions')
+        fields = ('id', 'name', 'course', 'pass_mark', 'non_chapter_questions', 'chapter_questions')
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass

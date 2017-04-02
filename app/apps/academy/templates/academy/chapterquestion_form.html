@@ -92,11 +92,7 @@
                         {{ forms.question_form.detail }}
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-outline-info btn-sm my-2" type="button" data-toggle="collapse"
-                                data-target="#imageUpload" aria-expanded="false" aria-controls="imageUpload">
-                            {{ forms.question_form.image.label }}
-                        </button>
-                        <div id="imageUpload" class="collapse card-block" data-bind="fileDrag: image">
+                        <div class="card-block my-2" data-bind="fileDrag: image">
                             <div class="form-group row">
                                 <div class="col-6">
                                     <img style="height: 125px;" class="img-rounded  thumb"

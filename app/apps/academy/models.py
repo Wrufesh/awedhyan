@@ -148,9 +148,11 @@ class ChapterPage(models.Model):
     def __str__(self):
         return '%s-%s' % (self.name, self.course)
 
+
 class TestQuestion(models.Model):
+    chapter = models.ForeignKey(ChapterPage, null=True, blank=True)
     question = models.ForeignKey(Question, related_name='tests')
-    pionts = models.PositiveIntegerField()
+    points = models.PositiveIntegerField()
 
 
 class Test(models.Model):
@@ -161,6 +163,12 @@ class Test(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tests')
+
+    def get_chapter_questions(self):
+        return self.questions.all().filter(chapter__isnull=False)
+
+    def get_non_chapter_questions(self):
+        return self.questions.all().filter(chapter__isnull=True)
 
 
 class Option(models.Model):

@@ -71,16 +71,17 @@ function Test() {
     var self = this;
     self.id = ko.observable();
     self.name = ko.observable();
+    self.chapter = ko.observable(); 
     self.course = ko.observable();
     self.pass_marks = ko.observable();
-    self.pass_marks = ko.observable();
-    self.questions = ko.observable();
+    self.chapter_questions = ko.observableArray();
+    self.non_chapter_questions = ko.observableArray();
 
-    self.add_question = function () {
-        self.questions.push(new Question());
+    self.add_non_chapter_question = function () {
+        self.non_chapter_questions.push(new Question());
     };
 
-    self.remove_question = function (question) {
+    self.remove_non_chapter_question = function (question) {
         if (question.id()) {
             self.questions_to_delete.push(question.id());
         }
