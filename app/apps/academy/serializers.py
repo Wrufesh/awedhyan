@@ -1,7 +1,7 @@
 from django.utils.regex_helper import Choice
 from rest_framework import serializers
 
-from .models import Test, Question, Option, TestQuestion
+from .models import Test, Question, Option, TestQuestion, Course, ChapterPage
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -19,23 +19,31 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class TestQuestionSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer(many=False)
 
     class Meta:
         model = TestQuestion
         fields = ('id', 'question', 'chapter', 'points')
 
 
-class TestQuestionDetailSerializer(serializers.ModelSerializer):
-    question = QuestionSerializer(many=False)
+class ChapterPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChapterPage
+        fields = ('id', 'name')
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    chapters = ChapterPageSerializer(many=True)
 
     class Meta:
-        model = TestQuestion
-        fields = ('id', 'question', 'points')
+        model = Course
+        fields = ('id', 'name', 'chapters')
 
 
 class TestSerializer(serializers.ModelSerializer):
-    non_chapter_questions = TestQuestionDetailSerializer(source='get_non_chapter_questions',many=True)
+    non_chapter_questions = TestQuestionSerializer(source='get_non_chapter_questions', many=True)
     chapter_questions = TestQuestionSerializer(source='get_chapter_questions', many=True)
+    # course = CourseSerializer(many=False)
 
     class Meta:
         model = Test

@@ -12,7 +12,7 @@ from django.views.generic import ListView
 from .serializers import QuestionSerializer, TestSerializer
 from app.utils.mixins import DeleteView, UpdateView, CreateView, LoginRequiredMixin
 from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm, \
-    QuestionForm, OptionForm
+    QuestionForm, OptionForm, TestCreateForm
 from .models import BoardOrUniversity, Faculty, Program, ProgramLevel, Institute, Course, ChapterPage, Question, Option, \
     Test
 
@@ -297,6 +297,7 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
             context['initial_data'] = serializer.data
 
         context['forms'] = {
+            'test_create_form': TestCreateForm(),
             'question_form': QuestionForm(),
             'choice_form': OptionForm()
         }

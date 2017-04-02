@@ -1,6 +1,6 @@
 from django import forms
 from app.apps.academy.models import BoardOrUniversity, Faculty, Program, ProgramLevel, Course, Institute, ChapterPage, \
-    Option, Question
+    Option, Question, Test
 from app.utils.forms import HTML5BootstrapModelForm
 from django.utils.translation import ugettext as _
 
@@ -96,4 +96,17 @@ class QuestionForm(HTML5BootstrapModelForm):
             'type': forms.Select(attrs={'data-bind': 'value: type'}),
             'true_false_answer': forms.CheckboxInput(
                 attrs={'data-bind': 'bsToggle: true_false_answer, bsToggleData: {"on": "True", "off": "False"}'})
+        }
+
+
+class TestCreateForm(HTML5BootstrapModelForm):
+
+    class Meta:
+        model = Test
+        fields = ('name', 'course', 'pass_mark')
+
+        widgets = {
+            'name' : forms.TextInput(attrs={'data-bind': 'value: name'}),
+            'course' : forms.Select(attrs={'data-bind': 'value: name'}),
+            'pass_marks' : forms.NumberInput(attrs={'data-bind': 'value: pass_marks'})
         }

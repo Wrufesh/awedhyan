@@ -47,4 +47,8 @@ urlpatterns = [
 
     # Chapter Questions
     url(r'^chapterquestions/add/(?P<chapter_id>[0-9]+)/$', ChapterQuestion.as_view(), name='chapterquestions_add'),
+
+    # Create Test
+    url(r'^test/create/$', TestCreateEditView.as_view(), name='test_add'),
+    url(r'^test/update/(?P<test_id>[0-9]+)/$', TestCreateEditView.as_view(), name='test_edit'),
 ]

@@ -71,7 +71,7 @@ function Test() {
     var self = this;
     self.id = ko.observable();
     self.name = ko.observable();
-    self.chapter = ko.observable(); 
+    self.chapters = ko.observableArray();
     self.course = ko.observable();
     self.pass_marks = ko.observable();
     self.chapter_questions = ko.observableArray();
