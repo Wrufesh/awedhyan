@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils.translation import ugettext as _
 
-from app.apps.academy.signal_receivers import delete_question_choice
+from app.apps.academy.signal_receivers import delete_question_choice, delete_non_chapter_question
 
 
 class Institute(models.Model):
@@ -153,6 +153,8 @@ class TestQuestion(models.Model):
     chapter = models.ForeignKey(ChapterPage, null=True, blank=True)
     question = models.ForeignKey(Question, related_name='tests')
     points = models.PositiveIntegerField()
+
+pre_delete.connect(delete_non_chapter_question, sender=TestQuestion)
 
 
 class Test(models.Model):

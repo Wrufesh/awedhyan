@@ -20,20 +20,19 @@ function Choice() {
 
 }
 
-function TestChapterQuestion() {
+function TestChapterQuestion(data) {
     var self = this;
     self.id = ko.observable();
     // This is observable of question ID
     self.question = ko.observable();
+    self.chapter = ko.observable();
     self.points = ko.observable();
-}
 
-function TestNonChapterQuestion() {
-    var self = this;
-    self.id = ko.observable();
-    self.points = ko.observable();
-    // This is observable of question object
-    self.question = ko.observable();
+    if (data) {
+        for (var i in data) {
+            self[i](data[i])
+        }
+    }
 }
 
 // fields = ('id', 'detail', 'image', 'true_false_answer', 'type', 'choices')
@@ -87,6 +86,15 @@ function Question() {
     //     }
     // })
 }
+
+function TestNonChapterQuestion() {
+    var self = this;
+    self.id = ko.observable();
+    self.points = ko.observable();
+    // This is observable of question object
+    self.question = ko.observable(new Question());
+}
+
 // fields = ('id', 'name', 'course', 'pass_mark', 'questions')
 function Test() {
     var self = this;
@@ -99,16 +107,40 @@ function Test() {
     self.non_chapter_questions = ko.observableArray();
 
     self.selected_course_chapter_questions = ko.observableArray();
+    self.test_questions_to_delete = ko.observableArray();
+
+    self.update_selected_chapter_questions = function () {
+        var new_chapter_questions = [];
+        ko.arrayForEach(self.selected_course_chapter_questions(), function (chapter) {
+            ko.arrayForEach(chapter.questions, function (question) {
+                if (question.is_selected()) {
+                    var data = {
+                        'id': question.test_question_id(),
+                        'question': question.id,
+                        'chapter': chapter.id,
+                        'points': question.points
+                    };
+                    new_chapter_questions.push(new TestChapterQuestion(data))
+                }else{
+                    self.test_questions_to_delete.push(question.test_question_id())
+                }
+            })
+        });
+        self.chapter_questions(new_chapter_questions)
+    };
 
     self.course.subscribe(function () {
-        console.log('hey');
         if (self.course()) {
             get_course_chapters(self.course(), function (response) {
                 console.log(response);
+
                 var modified_response = ko.utils.arrayMap(response, function (chapter) {
                     var modified_questions = ko.utils.arrayMap(chapter.questions, function (question) {
+                        question.test_question_id = ko.observable()
                         question['is_selected'] = ko.observable();
                         question['points'] = ko.observable();
+                        question.points.subscribe(self.update_selected_chapter_questions);
+                        question.is_selected.subscribe(self.update_selected_chapter_questions);
 
                         return question
                     });
@@ -117,38 +149,49 @@ function Test() {
 
                     return chapter
                 });
-                console.log(modified_response);
                 self.selected_course_chapter_questions(modified_response)
+
+                ko.utils.arrayForEach(self.selected_course_chapter_questions(), function (chapter) {
+                    ko.utils.arrayForEach(chapter.questions, function (question) {
+                        ko.utils.arrayForEach(self.chapter_questions(), function (chapter_question) {
+                            if (chapter_question.question == question.id) {
+                                question.is_selected(true);
+                                question.points(chapter_question.points());
+                                question.test_question_id(chapter_question.id())
+                            }
+                        })
+                    })
+                });
             });
         }
     });
 
     self.add_non_chapter_question = function () {
-        self.non_chapter_questions.push(new Question());
+        self.non_chapter_questions.push(new TestNonChapterQuestion());
     };
 
-    self.remove_non_chapter_question = function (question) {
-        if (question.id()) {
-            self.questions_to_delete.push(question.id());
+    self.remove_non_chapter_question = function (nonchapter_question) {
+        if (nonchapter_question.id()) {
+            self.test_questions_to_delete.push(nonchapter_question.id());
         }
-        self.questions.remove(question)
+        self.non_chapter_questions.remove(nonchapter_question)
     };
 
     self.validation = function () {
         var valid = true;
-        ko.utils.arrayForEach(self.questions(), function (question) {
-            if (question.type() == 'OBJECTIVE') {
+        ko.utils.arrayForEach(self.non_chapter_questions(), function (non_chapter_question) {
+            if (non_chapter_question.question().type() == 'OBJECTIVE') {
                 var has_no_correct_choice = true;
-                ko.utils.arrayForEach(question.choices(), function (choice) {
+                ko.utils.arrayForEach(non_chapter_question.question().choices(), function (choice) {
                     if (choice.is_correct()) {
                         has_no_correct_choice = false;
                     }
                 });
                 if (has_no_correct_choice) {
                     valid = false;
-                    question.errors.push('Atleast one correct choice needed.');
+                    non_chapter_question.question().errors.push('Atleast one correct choice needed.');
                 } else {
-                    question.errors([]);
+                    non_chapter_question.question().errors([]);
                 }
             }
 
