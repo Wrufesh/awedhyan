@@ -281,7 +281,7 @@ class ChapterQuestion(TemplateView, LoginRequiredMixin):
                     option_obj.is_correct = option.get('is_correct')
                     option_obj.question = question_obj
                     option_obj.save()
-        return JsonResponse({'success': True})
+        return JsonResponse({'success': True, 'course_id':'here should be course id to redirect'})
 
 
 class TestCreateEditView(TemplateView, LoginRequiredMixin):

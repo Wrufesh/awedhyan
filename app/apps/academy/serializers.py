@@ -18,12 +18,19 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('id', 'detail', 'image', 'true_false_answer', 'type', 'choices')
 
 
-class TestQuestionSerializer(serializers.ModelSerializer):
+class TestQuestionDetailSerializer(serializers.ModelSerializer):
     question = QuestionSerializer(many=False)
 
     class Meta:
         model = TestQuestion
-        fields = ('id', 'question', 'chapter', 'points')
+        fields = ('id', 'question', 'points')
+
+
+class TestQuestionMinSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TestQuestion
+        fields = ('id', 'question','chapter' 'points')
 
 
 class ChapterPageSerializer(serializers.ModelSerializer):
@@ -35,8 +42,8 @@ class ChapterPageSerializer(serializers.ModelSerializer):
 
 
 class TestSerializer(serializers.ModelSerializer):
-    non_chapter_questions = TestQuestionSerializer(source='get_non_chapter_questions', many=True)
-    chapter_questions = TestQuestionSerializer(source='get_chapter_questions', many=True)
+    non_chapter_questions = TestQuestionDetailSerializer(source='get_non_chapter_questions', many=True)
+    chapter_questions = TestQuestionMinSerializer(source='get_chapter_questions', many=True)
     # course = CourseSerializer(many=False)
 
     class Meta:

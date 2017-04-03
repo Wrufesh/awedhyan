@@ -28,7 +28,7 @@ function TestChapterQuestion() {
     self.points = ko.observable();
 }
 
-function TestNonChapterQuestion(){
+function TestNonChapterQuestion() {
     var self = this;
     self.id = ko.observable();
     self.points = ko.observable();
@@ -100,11 +100,25 @@ function Test() {
 
     self.selected_course_chapter_questions = ko.observableArray();
 
-    self.course.subscribe(function(){
+    self.course.subscribe(function () {
         console.log('hey');
-        if (self.course()){
-            get_course_chapters(self.course(), function(response){
-                self.selected_course_chapter_questions(response)
+        if (self.course()) {
+            get_course_chapters(self.course(), function (response) {
+                console.log(response);
+                var modified_response = ko.utils.arrayMap(response, function (chapter) {
+                    var modified_questions = ko.utils.arrayMap(chapter.questions, function (question) {
+                        question['is_selected'] = ko.observable();
+                        question['points'] = ko.observable();
+
+                        return question
+                    });
+
+                    chapter.questions = modified_questions;
+
+                    return chapter
+                });
+                console.log(modified_response);
+                self.selected_course_chapter_questions(modified_response)
             });
         }
     });

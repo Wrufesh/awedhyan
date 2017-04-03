@@ -9,7 +9,7 @@
     <script>
         $(document).ready(function () {
             var initialData = {{ initial_data | jsonify }};
-            var vm = new Test();
+            vm = new Test();
             ko.applyBindings(vm);
             {#            if (initialData.questions) {#}
             {#                var mapping = {#}
@@ -89,22 +89,46 @@
                              data-bind="attr: { id: 'chq-title' + String($data.id) }">
                             <h5 class="mb-0">
                                 <a data-toggle="collapse" data-parent="#accordion"
-                                   aria-expanded="true"
+                                   aria-expanded="false"
                                    data-bind="attr: { 'href': '#' + 'chq-body' + String($data.id), 'aria-controls': 'chq-body' + String($data.id) }, text: $data.name">
                                 </a>
                             </h5>
                         </div>
 
-                        <div class="collapse show" role="tabpanel"
+                        <div class="collapse" role="tabpanel"
                              data-bind="attr: { 'aria-labelledby': 'chq-title' + String($data.id), 'id': 'chq-body' + String($data.id) }">
                             <div class="card-block">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                                squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it
-                                squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica,
-                                craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur
-                                butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth
-                                nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                <!-- ko foreach: questions -->
+                                <div class="card-block row bg-faded my-3">
+                                    <div class="card-block col-8">
+                                        Question: <p data-bind="text: $data.detail"></p>
+                                    </div>
+                                    <div class="card-block col-4">
+                                        Type: <p data-bind="text: $data.type"></p>
+                                    </div>
+                                    <div data-bind="visible: $data.type == 'OBJECTIVE' ? true : false " class="col-12">
+                                        <div class="col-12">
+                                            Choices:
+                                        </div>
+                                        <!-- ko foreach: choices -->
+                                        <div class="col-12">
+                                            <p data-bind="text: $data.detail"></p>
+                                        </div>
+                                        <!-- /ko -->
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="float-right">
+                                            Selected: <input type="checkbox"
+                                                             data-bind="bsToggle: $data.is_selected, bsToggleData: {'on': 'Yes', 'off': 'No'}">
+                                        </div>
+                                        <div class="float-right mx-3" data-bind="visible: $data.is_selected()">
+                                            Points: <input type="number" data-bind="value: $data.points">
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- /ko -->
+
                             </div>
                         </div>
                     </div>
