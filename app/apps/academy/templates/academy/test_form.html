@@ -136,7 +136,106 @@
                 </div>
                 <!-- /ko -->
             </div>
+        </div>
 
+        <div class="card bg-faded">
+            <div class="card-block">
+                <div data-bind="foreach: non_chapter_questions">
+                    <!-- ko with: question -->
+                    <div class="card my-2 bg-faded" data-bind="css: {'bg-info': errors().length > 0}">
+                        <div class="errorlist">
+                            <ul class="list-group">
+                                <!-- ko foreach: errors -->
+                                <li class="list-group-item list-group-item-danger" data-bind="text: $data"></li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
+                        <div class="row card-block">
+                            <div class="col-12">
+                                {{ forms.question_form.detail.label }}
+                                {{ forms.question_form.detail }}
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-outline-info btn-sm my-2" type="button" data-toggle="collapse"
+                                        aria-expanded="false"
+                                        data-bind="attr:{'data-target': '#' + 'qimage' + id(), 'aria-controls': 'qimage' + id()}">
+                                    {{ forms.question_form.image.label }}
+                                </button>
+                                <div class="collapse card-block my-2"
+                                     data-bind="fileDrag: image, attr:{ 'id': 'qimage' + id() }">
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <img style="height: 125px;" class="img-rounded  thumb"
+                                                 data-bind="attr: { src: image().dataURL }, visible: image().dataURL">
+                                            <div data-bind="ifnot: image().dataURL">
+                                                <label class="drag-label">Drag file here</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="file" data-bind="fileInput: image, customFileInput: {
+              buttonClass: 'btn btn-outline-success btn-sm',
+              fileNameClass: 'disabled form-control'
+            }" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-12">
+                                {{ forms.question_form.type.label }}
+                                {{ forms.question_form.type }}
+                            </div>
+                            <div class="col-12 my-2" data-bind="visible: type() == 'TRUE/FALSE'">
+                                {{ forms.question_form.true_false_answer.label }}
+                                {{ forms.question_form.true_false_answer }}
+                            </div>
+                            <!-- ko foreach: choices -->
+                            <div class="col-6">
+                                <div class="card my-2">
+                                    <div class="card-block">
+                                        <div class="col-12">
+                                            {{ forms.choice_form.detail.label }}
+                                            {{ forms.choice_form.detail }}
+                                        </div>
+                                        <div class="col-12 my-2">
+                                            {{ forms.choice_form.is_correct.label }}
+                                            {{ forms.choice_form.is_correct }}
+                                        </div>
+                                        <div class="col-12 my-2">
+                                            <button type="button" data-bind="click: $parent.remove_choice"
+                                                    class="btn btn-outline-danger btn-sm">
+                                                {% trans 'Remove Choice' %}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /ko -->
+
+                            <div class="col-12">
+                                <button data-bind="click: add_choice, visible: choices().length > 0"
+                                        class="btn btn-primary btn-sm">{% trans 'Add Choice' %}</button>
+                                <button type="button" data-bind="click: $root.remove_non_chapter_question"
+                                        class="btn btn-danger btn-sm float-right">
+                                    {% trans 'Remove Question' %}
+                                </button>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <!-- /ko -->
+                    <div class="float-right mx-3 col-12">
+                        Points: <input type="number" data-bind="value: points" required>
+                    </div>
+                </div>
+                <button data-bind="click: add_non_chapter_question"
+                        class="btn btn-primary">{% trans 'Add Question' %}</button>
+                <input type="submit" value="Save" class="btn btn-primary">
+            </div>
+        </div>
     </form>
 
 {% endblock %}

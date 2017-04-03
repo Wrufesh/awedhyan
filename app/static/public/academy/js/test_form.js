@@ -111,8 +111,8 @@ function Test() {
 
     self.update_selected_chapter_questions = function () {
         var new_chapter_questions = [];
-        ko.arrayForEach(self.selected_course_chapter_questions(), function (chapter) {
-            ko.arrayForEach(chapter.questions, function (question) {
+        ko.utils.arrayForEach(self.selected_course_chapter_questions(), function (chapter) {
+            ko.utils.arrayForEach(chapter.questions, function (question) {
                 if (question.is_selected()) {
                     var data = {
                         'id': question.test_question_id(),
