@@ -107,6 +107,6 @@ class TestCreateForm(HTML5BootstrapModelForm):
 
         widgets = {
             'name' : forms.TextInput(attrs={'data-bind': 'value: name'}),
-            'course' : forms.Select(attrs={'data-bind': 'value: name'}),
+            'course' : forms.Select(attrs={'data-bind': 'value: course'}),
             'pass_marks' : forms.NumberInput(attrs={'data-bind': 'value: pass_marks'})
         }

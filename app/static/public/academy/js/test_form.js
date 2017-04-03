@@ -1,4 +1,17 @@
 // fields = ('id', 'detail', 'is_correct')
+var get_course_chapters = function (course_id, defaultCallback) {
+    var failureCallback = function (err) {
+        var err_message = err.responseJSON.detail;
+        var error = App.notifyUser(
+            err_message,
+            'error'
+        );
+        App.hideProcessing();
+    };
+    var url = '/api/coursechapters/?course_id=' + String(course_id);
+    App.remoteGet(url, {}, defaultCallback, failureCallback);
+};
+
 function Choice() {
     var self = this;
     self.id = ko.observable();
@@ -7,18 +20,27 @@ function Choice() {
 
 }
 
-function ChapterQuestion() {
+function TestChapterQuestion() {
     var self = this;
-    self.question_id = ko.observable();
+    self.id = ko.observable();
+    // This is observable of question ID
+    self.question = ko.observable();
     self.points = ko.observable();
 }
 
+function TestNonChapterQuestion(){
+    var self = this;
+    self.id = ko.observable();
+    self.points = ko.observable();
+    // This is observable of question object
+    self.question = ko.observable();
+}
+
 // fields = ('id', 'detail', 'image', 'true_false_answer', 'type', 'choices')
-function NewQuestion() {
+function Question() {
     var self = this;
 
     self.id = ko.observable();
-    self.points = ko.observable();
     self.detail = ko.observable();
     // self.image = ko.observable();
     self.image = ko.observable({
@@ -28,7 +50,6 @@ function NewQuestion() {
     self.type = ko.observable();
     self.choices = ko.observableArray();
     self.errors = ko.observableArray();
-    // self.question_error_class = ko.observable();
 
     self.choices_to_delete = ko.observableArray();
 
@@ -76,6 +97,17 @@ function Test() {
     self.pass_marks = ko.observable();
     self.chapter_questions = ko.observableArray();
     self.non_chapter_questions = ko.observableArray();
+
+    self.selected_course_chapter_questions = ko.observableArray();
+
+    self.course.subscribe(function(){
+        console.log('hey');
+        if (self.course()){
+            get_course_chapters(self.course(), function(response){
+                self.selected_course_chapter_questions(response)
+            });
+        }
+    });
 
     self.add_non_chapter_question = function () {
         self.non_chapter_questions.push(new Question());

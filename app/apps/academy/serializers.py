@@ -27,17 +27,11 @@ class TestQuestionSerializer(serializers.ModelSerializer):
 
 
 class ChapterPageSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True)
+
     class Meta:
         model = ChapterPage
-        fields = ('id', 'name')
-
-
-class CourseSerializer(serializers.ModelSerializer):
-    chapters = ChapterPageSerializer(many=True)
-
-    class Meta:
-        model = Course
-        fields = ('id', 'name', 'chapters')
+        fields = ('id', 'name', 'questions')
 
 
 class TestSerializer(serializers.ModelSerializer):

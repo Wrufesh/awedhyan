@@ -42,7 +42,8 @@ INSTALLED_APPS += [
     'app.apps.academy',
     'app.apps.users',
     'el_pagination',
-    'webstack_django_sorting'
+    'webstack_django_sorting',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -134,4 +135,4 @@ MEDIA_ROOT = os.path.join(PROJECT_DIR, 'static/media')
 # Abstrat User
 AUTH_USER_MODEL = 'users.User'
 
-EL_PAGINATION_PER_PAGE = 1
+EL_PAGINATION_PER_PAGE = 10
