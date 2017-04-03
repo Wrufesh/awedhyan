@@ -100,7 +100,6 @@ function Test() {
     var self = this;
     self.id = ko.observable();
     self.name = ko.observable();
-    self.chapters = ko.observableArray();
     self.course = ko.observable();
     self.pass_marks = ko.observable();
     self.chapter_questions = ko.observableArray();
@@ -201,26 +200,28 @@ function Test() {
 
     self.save = function () {
         if (self.validation()) {
-            App.showProcessing();
-            var payload = ko.toJSON(self);
-            var url = '/academy/chapterquestions/add/' + String(self.chapter_id()) + '/';
-
-
-            var defaultCallback = function (response) {
-                if (response.success) {
-                    App.hideProcessing();
-                    App.notifyUser('Succesfully Saved', 'success');
-                }
-            };
-            var failureCallback = function (err) {
-                var err_message = err.responseJSON.detail;
-                var error = App.notifyUser(
-                    err_message,
-                    'error'
-                );
-                App.hideProcessing();
-            };
-            App.remoteMultipartPost(url, payload, defaultCallback, failureCallback);
+            // App.showProcessing();
+            // var payload = ko.toJSON(self);
+            var payload = ko.toJS(self);
+            console.log(payload)
+            // var url = '/academy/chapterquestions/add/' + String(self.chapter_id()) + '/';
+            //
+            //
+            // var defaultCallback = function (response) {
+            //     if (response.success) {
+            //         App.hideProcessing();
+            //         App.notifyUser('Succesfully Saved', 'success');
+            //     }
+            // };
+            // var failureCallback = function (err) {
+            //     var err_message = err.responseJSON.detail;
+            //     var error = App.notifyUser(
+            //         err_message,
+            //         'error'
+            //     );
+            //     App.hideProcessing();
+            // };
+            // App.remoteMultipartPost(url, payload, defaultCallback, failureCallback);
         }
 
 

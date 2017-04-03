@@ -121,8 +121,8 @@
                                             Selected: <input type="checkbox"
                                                              data-bind="bsToggle: $data.is_selected, bsToggleData: {'on': 'Yes', 'off': 'No'}">
                                         </div>
-                                        <div class="float-right mx-3" data-bind="visible: $data.is_selected()">
-                                            Points: <input type="number" data-bind="value: $data.points" required>
+                                        <div class="float-right mx-3">
+                                            Points: <input type="number" data-bind="value: $data.points, attr:{'name': 'chqp' + $data.id}, disable: !$data.is_selected()" required>
                                         </div>
 
                                     </div>
@@ -228,7 +228,7 @@
                     </div>
                     <!-- /ko -->
                     <div class="float-right mx-3 col-12">
-                        Points: <input type="number" data-bind="value: points" required>
+                        Points: <input type="number" data-bind="value: points, attr: {'name': 'nchp' + id()}" required>
                     </div>
                 </div>
                 <button data-bind="click: add_non_chapter_question"
