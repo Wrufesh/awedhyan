@@ -94,11 +94,11 @@
                     <div class="col-12">
                         <button class="btn btn-outline-info btn-sm my-2" type="button" data-toggle="collapse"
                                 aria-expanded="false"
-                                data-bind="attr:{'data-target': '#' + 'qimage' + id(), 'aria-controls': 'qimage' + id()}">
+                                data-bind="attr:{'data-target': '#' + 'qimage' + $index(), 'aria-controls': 'qimage' + $index()}">
                             {{ forms.question_form.image.label }}
                         </button>
                         <div class="collapse card-block my-2"
-                             data-bind="fileDrag: image, attr:{ 'id': 'qimage' + id() }">
+                             data-bind="fileDrag: image, attr:{ 'id': 'qimage' + $index() }">
                             <div class="form-group row">
                                 <div class="col-6">
                                     <img style="height: 125px;" class="img-rounded  thumb"

@@ -120,8 +120,10 @@ function Test() {
                         'points': question.points
                     };
                     new_chapter_questions.push(new TestChapterQuestion(data))
-                }else{
-                    self.test_questions_to_delete.push(question.test_question_id())
+                } else {
+                    if (typeof(question.test_question_id()) != 'undefined') {
+                        self.test_questions_to_delete.push(question.test_question_id())
+                    }
                 }
             })
         });
