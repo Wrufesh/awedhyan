@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils.translation import ugettext as _
 
-from app.apps.academy.signal_receivers import delete_question_choice, delete_non_chapter_question
+from app.apps.academy.signal_receivers import delete_question_choice, delete_non_chapter_question, delete_test_question
 
 
 class Institute(models.Model):
@@ -171,6 +171,8 @@ class Test(models.Model):
 
     def get_non_chapter_questions(self):
         return self.questions.all().filter(chapter__isnull=True)
+
+pre_delete.connect(delete_test_question, sender=Test)
 
 
 class Option(models.Model):

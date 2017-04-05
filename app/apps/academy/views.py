@@ -1,6 +1,4 @@
 import json
-
-import base64
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
@@ -9,6 +7,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 
+from app.utilities import base64_content_file
 from .serializers import QuestionSerializer, TestSerializer
 from app.utils.mixins import DeleteView, UpdateView, CreateView, LoginRequiredMixin
 from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm, \
@@ -21,6 +20,7 @@ from django.views.generic import TemplateView
 from app.apps.users.forms import InstituteUserForm
 
 User = get_user_model()
+
 
 class InstituteView(LoginRequiredMixin):
     model = Institute
@@ -216,12 +216,8 @@ class ChapterDelete(ChapterView, DeleteView):
     pass
 
 
-def base64_content_file(data):
-    format, imgstr = data.split(';base64,')
-    ext = format.split('/')[-1]
-
-    data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
-    return data
+class TestView(TemplateView, LoginRequiredMixin):
+    template_name = 'academy/test.html'
 
 
 class ChapterQuestion(TemplateView, LoginRequiredMixin):
@@ -281,7 +277,7 @@ class ChapterQuestion(TemplateView, LoginRequiredMixin):
                     option_obj.is_correct = option.get('is_correct')
                     option_obj.question = question_obj
                     option_obj.save()
-        return JsonResponse({'success': True, 'course_id':'here should be course id to redirect'})
+        return JsonResponse({'success': True, 'course_id': 'here should be course id to redirect'})
 
 
 class TestCreateEditView(TemplateView, LoginRequiredMixin):
@@ -303,3 +299,24 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
         }
 
         return context
+
+    def post(self, request, **kwargs):
+        data = json.loads(request.body.decode())
+
+        updated_non_chapter_questions = []
+        for test_question in data.get('non_chapter_questions'):
+            if test_question.get('question').get('image').get('fileArray'):
+                test_question['question']['image'] = test_question.get('question').get('image').get('dataURL')
+            else:
+                test_question['question'].pop('image')
+
+            updated_non_chapter_questions.append(test_question)
+        data['non_chapter_questions'] = updated_non_chapter_questions
+
+        ser = TestSerializer(data=data)
+        if ser.is_valid():
+            ser.create(ser.data)
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errors': ser.errors})
+
