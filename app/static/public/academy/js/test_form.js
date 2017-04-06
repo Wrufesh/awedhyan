@@ -228,6 +228,7 @@ function Test() {
                 if (response.success) {
                     App.hideProcessing();
                     App.notifyUser('Succesfully Saved', 'success');
+                    windows.location = '/academy/test/list';
                 }
             };
             var failureCallback = function (err) {

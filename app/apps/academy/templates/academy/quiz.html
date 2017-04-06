@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+{% load filters %}
+{% load i18n %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_js %}
+    <script>
+        $(document).ready(function () {
+            var initialData = {{ initial_data | jsonify }};
+            var vm = new ChapterQuestion(initialData.chapter_id);
+            ko.applyBindings(vm);
+            if (initialData.questions) {
+                var mapping = {
+                    'questions': {
+                        create: function (options) {
+                            var question_mapping = {
+                                'choices': {
+                                    create: function (options) {
+                                        var choice = ko.mapping.fromJS(options.data, {}, new Choice());
+                                        return choice;
+                                    }
+                                },
+                                'image': {
+                                    update: function (options) {
+                                        if (!options.data) {
+                                            return {
+                                                dataURL: ko.observable()
+                                            }
+                                        } else {
+                                            return {
+                                                dataURL: ko.observable(options.data)
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+
+                            var question = ko.mapping.fromJS(options.data, question_mapping, new Question());
+
+                            return question;
+                        }
+                    }
+
+                };
+                ko.mapping.fromJS(initialData, mapping, vm);
+
+            }
+        });
+    </script>
+    <script type="text/javascript" src="{% static 'public/plugins/knockout/dist/knockout.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/plugins/knockout-mapping/knockout.mapping.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/plugins/knockout-bindings/bindings.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'public/plugins/knockout-file-bindings/knockout-file-bindings.js' %}"></script>
+
+    <script type="text/javascript"
+            src="{% static 'public/plugins/bootstrap-toggle/js/bootstrap-toggle.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'public/plugins/blockUI/jquery.blockUI.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/plugins/toastr/toastr.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/plugins/jsutil/App.js' %}"></script>
+    <script type="text/javascript" src="{% static 'public/academy/js/chapterquestion_form.js' %}"></script>
+{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'public/plugins/bootstrap-toggle/css/bootstrap-toggle.min.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'public/plugins/toastr/toastr.min.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'public/plugins/knockout-file-bindings/knockout-file-bindings.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <form data-bind="submit: save" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="">
+            <!-- ko foreach: questions -->
+            <div class="card my-2 bg-faded" data-bind="css: {'bg-info': errors().length > 0}">
+                <div class="errorlist">
+                    <ul class="list-group">
+                        <!-- ko foreach: errors -->
+                        <li class="list-group-item list-group-item-danger" data-bind="text: $data"></li>
+                        <!-- /ko -->
+                    </ul>
+                </div>
+                <div class="row card-block">
+                    <div class="col-12">
+                        {{ forms.question_form.detail.label }}
+                        {{ forms.question_form.detail }}
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-outline-info btn-sm my-2" type="button" data-toggle="collapse"
+                                aria-expanded="false"
+                                data-bind="attr:{'data-target': '#' + 'qimage' + $index(), 'aria-controls': 'qimage' + $index()}">
+                            {{ forms.question_form.image.label }}
+                        </button>
+                        <div class="collapse card-block my-2"
+                             data-bind="fileDrag: image, attr:{ 'id': 'qimage' + $index() }">
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <img style="height: 125px;" class="img-rounded  thumb"
+                                         data-bind="attr: { src: image().dataURL }, visible: image().dataURL">
+                                    <div data-bind="ifnot: image().dataURL">
+                                        <label class="drag-label">Drag file here</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <input type="file" data-bind="fileInput: image, customFileInput: {
+              buttonClass: 'btn btn-outline-success btn-sm',
+              fileNameClass: 'disabled form-control'
+            }" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-12">
+                        {{ forms.question_form.type.label }}
+                        {{ forms.question_form.type }}
+                    </div>
+                    <div class="col-12 my-2" data-bind="visible: type() == 'TRUE/FALSE'">
+                        {{ forms.question_form.true_false_answer.label }}
+                        {{ forms.question_form.true_false_answer }}
+                    </div>
+                    <!-- ko foreach: choices -->
+                    <div class="col-6">
+                        <div class="card my-2">
+                            <div class="card-block">
+                                <div class="col-12">
+                                    {{ forms.choice_form.detail.label }}
+                                    {{ forms.choice_form.detail }}
+                                </div>
+                                <div class="col-12 my-2">
+                                    {{ forms.choice_form.is_correct.label }}
+                                    {{ forms.choice_form.is_correct }}
+                                </div>
+                                <div class="col-12 my-2">
+                                    <button type="button" data-bind="click: $parent.remove_choice"
+                                            class="btn btn-outline-danger btn-sm">
+                                        {% trans 'Remove Choice' %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <div class="col-12">
+                        <button data-bind="click: add_choice, visible: choices().length > 0"
+                                class="btn btn-primary btn-sm">{% trans 'Add Choice' %}</button>
+                        <button type="button" data-bind="click: $parent.remove_question"
+                                class="btn btn-danger btn-sm float-right">
+                            {% trans 'Remove Question' %}
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- /ko -->
+            <button data-bind="click: add_question" class="btn btn-primary">{% trans 'Add Question' %}</button>
+            <input type="submit" value="Save" class="btn btn-primary">
+        </div>
+    </form>
+
+{% endblock %}

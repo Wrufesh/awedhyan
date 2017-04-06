@@ -93,7 +93,7 @@ class Question(models.Model):
     )
     detail = models.CharField(max_length=1000)
 
-    image = models.ImageField(upload_to='question/', height_field=None, width_field=None, max_length=100, null=True, blank=True)
+    image = models.ImageField(upload_to='question/', height_field=None, width_field=None, null=True, blank=True)
 
     type = models.CharField(max_length=256, choices=type_choices)
 
@@ -103,42 +103,18 @@ class Question(models.Model):
 pre_delete.connect(delete_question_choice, sender=Question)
 
 
-class EssayAnswer(models.Model):
-    question = models.ForeignKey(Question, related_name='essay_answers')
-    student = models.ForeignKey(settings.AUTH_USER_MODEL)
-    answer_image = models.ImageField(upload_to='essay_answer/', height_field=None, width_field=None, max_length=100)
-
-    essay_answer_status_choices = (
-        ('CHECKED', _('Checked')),
-        ('UNCHECKED', _('Unchecked')),
-    )
-    status = models.CharField(max_length=128, choices=essay_answer_status_choices)
-    marks_obtained = models.PositiveIntegerField(null=True, blank=True)
-
-
-# class ChapterPage(Page):
-#     # parent_page_types = ['wagtailcore.Page']
-#     sub_page_types = []
-#     course = models.ForeignKey(Course, related_name='course_chapters', on_delete=models.SET_NULL, null=True, blank=True)
-#     datetime = models.DateTimeField(auto_now=True)
-#     body = StreamField([
-#         ('heading', blocks.CharBlock(classname="full title")),
-#         ('paragraph', blocks.RichTextBlock()),
-#         # ImageChooserBlock should be changed
-#         ('image', ImageChooserBlock()),
-#     ])
+# class EssayAnswer(models.Model):
+#     question = models.ForeignKey(Question, related_name='essay_answers')
+#     student = models.ForeignKey(settings.AUTH_USER_MODEL)
+#     answer_image = models.ImageField(upload_to='essay_answer/', height_field=None, width_field=None, max_length=100)
 #
-#     content_panels = Page.content_panels + [
-#         StreamFieldPanel('body'),
-#         # FieldPanel('course')
-#     ]
-#
-#     # def get_context(self, request):
-#     #     context = super(ChapterPage, self).get_context(request)
-#     #
-#     #     # Add extra variables and return the updated context
-#     #     # context['blog_entries'] = BlogPage.objects.child_of(self).live()
-#     #     return context
+#     essay_answer_status_choices = (
+#         ('CHECKED', _('Checked')),
+#         ('UNCHECKED', _('Unchecked')),
+#     )
+#     status = models.CharField(max_length=128, choices=essay_answer_status_choices)
+#     marks_obtained = models.PositiveIntegerField(null=True, blank=True)
+
 
 class ChapterPage(models.Model):
     name = models.CharField(max_length=128)
@@ -182,3 +158,25 @@ class Option(models.Model):
     detail = models.CharField(max_length=1000)
     question = models.ForeignKey(Question, related_name="choices")
     is_correct = models.BooleanField(default=False)
+
+
+class TestQuestionAnswer(models.Model):
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='test_question_answers')
+    test = models.ForeignKey(Test, related_name='test_question_answers')
+    test_question = models.ForeignKey(TestQuestion, related_name='test_question_answers')
+    true_false_answer = models.BooleanField(default=False)
+    option_answers = models.ManyToManyField(Option)
+    # below two activates when question type is of essay
+    essay_answer = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to='answers/', height_field=None, width_field=None, null=True, blank=True)
+
+    @classmethod
+    def get_auto_computable_marks(cls, test_obj, student):
+        auto_computable_question_types = ['TRUE/FALSE', 'OBJECTIVE']
+        pass
+
+    @classmethod
+    def get_non_auto_computable_marks(cls, test_obj, student):
+        non_auto_computable_types = ['ESSAY']
+        pass
+

@@ -111,6 +111,7 @@ function ChapterQuestion(chapter_id) {
                 if (response.success) {
                     App.hideProcessing();
                     App.notifyUser('Succesfully Saved', 'success');
+                    windows.location = '/academy/chapter/list/' + response.course_id
                 }
             };
             var failureCallback = function (err) {

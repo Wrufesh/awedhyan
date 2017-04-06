@@ -53,4 +53,9 @@ urlpatterns = [
     url(r'^test/create/$', TestCreateEditView.as_view(), name='test_add'),
     url(r'^test/update/(?P<test_id>[0-9]+)/$', TestCreateEditView.as_view(), name='test_edit'),
     url(r'^test/delete/(?P<test_id>[0-9]+)/$', TestDeleteView.as_view(), name='test_delete'),
+
+    # Quiz
+    url(r'^chapter/quiz/(?P<chapter_id>[0-9]+)/$$', QuizView.as_view(), name='chapter_quiz'),
+    url(r'^test/quiz/(?P<test_id>[0-9]+)/$$', QuizView.as_view(), name='test_quiz'),
+
 ]

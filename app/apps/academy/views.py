@@ -9,7 +9,7 @@ from django.views.generic import ListView
 from rest_framework.response import Response
 
 from app.utils.utilities import base64_content_file
-from .serializers import QuestionSerializer, TestSerializer
+from .serializers import QuestionSerializer, TestSerializer, TestQuestionDetailSerializer
 from app.utils.mixins import DeleteView, UpdateView, CreateView, LoginRequiredMixin
 from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm, \
     QuestionForm, OptionForm, TestCreateForm
@@ -406,3 +406,25 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
 
             test.questions.add(*test_questions)
         return JsonResponse({'success': True})
+
+
+class QuizView(TemplateView, LoginRequiredMixin):
+    template_name = 'academy/quiz.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuizView, self).get_context_data(**kwargs)
+        test_id = self.kwargs.get('test_id', None)
+        chapter_id = self.kwargs.get('chapter', None)
+
+        if test_id:
+            test = Test.objects.get(id=test_id)
+            test_question_serializer = TestQuestionDetailSerializer(test, many=True)
+            context['test_questions'] = test_question_serializer.data
+        elif chapter_id:
+            chapter_questions = ChapterPage.objects.get(id=chapter_id).questions.all()
+            chapter_question_serializer = QuestionSerializer(chapter_questions, many=True)
+            context['chapter_questions'] = chapter_question_serializer.data
+        else:
+            context['test_questions'] = None
+            context['chapter_questions'] = None
+        return context
