@@ -6,6 +6,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView
+from rest_framework.response import Response
 
 from app.utils.utilities import base64_content_file
 from .serializers import QuestionSerializer, TestSerializer
@@ -269,6 +270,7 @@ class ChapterQuestion(TemplateView, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         chapter_id = self.kwargs.get('chapter_id')
         chapter = ChapterPage.objects.get(id=chapter_id)
+        course_id = chapter.course.id
         params = json.loads(request.body.decode())
         # TODO move this logic to API
         with transaction.atomic():
@@ -304,7 +306,7 @@ class ChapterQuestion(TemplateView, LoginRequiredMixin):
                     option_obj.is_correct = option.get('is_correct')
                     option_obj.question = question_obj
                     option_obj.save()
-        return JsonResponse({'success': True, 'course_id': 'here should be course id to redirect'})
+        return JsonResponse({'success': True, 'course_id': course_id})
 
 
 class TestCreateEditView(TemplateView, LoginRequiredMixin):
@@ -328,3 +330,79 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
         }
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body.decode())
+        test_id = self.kwargs.get('test_id', None)
+        import ipdb
+        ipdb.set_trace()
+        with transaction.atomic():
+            TestQuestion.objects.filter(id__in=data.get('test_questions_to_delete'))
+            if data.get('id'):
+                test = Test.objects.get(id=test_id)
+            else:
+                test = Test()
+
+            test.name = data.get('name')
+            test.course_id = data.get('course')
+            test.pass_mark = data.get('pass_mark')
+            test.created_by = request.user
+            test.save()
+            test_questions = []
+            for chapter_question_data in data.get('chapter_questions'):
+                chapter_question_id = chapter_question_data.get('id')
+                if chapter_question_id:
+                    chapter_question_obj = TestQuestion.objects.get(id=chapter_question_id)
+                else:
+                    chapter_question_obj = TestQuestion()
+                chapter_question_obj.question_id = chapter_question_data.get('question')
+                chapter_question_obj.chapter_id = chapter_question_data.get('chapter')
+                chapter_question_obj.points = chapter_question_data.get('points')
+                chapter_question_obj.save()
+                test_questions.append(chapter_question_obj)
+
+            for non_chapter_question_data in data.get('non_chapter_questions'):
+                non_chapter_question_id = non_chapter_question_data.get('id')
+                if non_chapter_question_id:
+                    non_chapter_question_obj = TestQuestion.objects.get(id=non_chapter_question_id)
+                else:
+                    non_chapter_question_obj = TestQuestion()
+
+                question_data = non_chapter_question_data.get('question')
+                question_id = question_data.get('id')
+                if question_id:
+                    question_obj = Question.objects.get(id=question_id)
+                else:
+                    question_obj = Question()
+
+                question_obj.detail = question_data.get('detail')
+
+                if question_data.get('image').get('fileArray'):
+                    question_obj.image.save(
+                        question_data.get('image').get('file').get('name'),
+                        base64_content_file(question_data.get('image').get('dataURL')),
+                        save=False)
+                question_obj.type = question_data.get('type')
+                question_obj.true_false_answer = question_data.get('true_false_answer')
+                question_obj.save()
+
+                Option.objects.filter(id__in=question_data.get('choices_to_delete')).delete()
+
+                for option_data in question_data.get('choices'):
+                    if option_data.get('id'):
+                        option_obj = Option.objects.get(id=option_data.get('id'))
+                    else:
+                        option_obj = Option()
+                    option_obj.detail = option_data.get('detail')
+                    option_obj.is_correct = option_data.get('is_correct')
+                    option_obj.question = question_obj
+                    option_obj.save()
+
+                non_chapter_question_obj.question = question_obj
+                non_chapter_question_obj.points = non_chapter_question_data.get('points')
+                non_chapter_question_obj.save()
+
+                test_questions.append(non_chapter_question_obj)
+
+            test.questions.add(*test_questions)
+        return JsonResponse({'success': True})

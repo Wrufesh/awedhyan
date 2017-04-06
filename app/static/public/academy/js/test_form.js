@@ -218,9 +218,9 @@ function Test() {
             // var payload = ko.toJS(self);
             console.log(payload);
             if (self.id()) {
-                var url = '/api/test/' + String(self.id()) + '/';
+                var url = '/academy/test/update/' + String(self.id()) + '/';
             } else {
-                var url = '/api/test/';
+                var url = '/academy/test/create/';
             }
 
 
@@ -238,11 +238,9 @@ function Test() {
                 );
                 App.hideProcessing();
             };
-            if(self.id()){
-                App.remotePut(url, payload, defaultCallback, failureCallback);
-            }else{
-                App.remotePost(url, payload, defaultCallback, failureCallback);
-            }
+
+            App.remoteMultipartPost(url, payload, defaultCallback, failureCallback);
+
         }
     };
 
