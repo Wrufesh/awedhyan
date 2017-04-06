@@ -92,4 +92,36 @@ class TestSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         import ipdb
         ipdb.set_trace()
-        pass
+        # with transaction.atomic():
+        #     instance.name = validated_data.get('name')
+        #     instance.course = validated_data.get('course')
+        #     instance.pass_mark = validated_data.get('pass_mark')
+        #     instance.save()
+        #
+        #     test_questions = []
+        #     for chapter_question in validated_data['get_chapter_questions']:
+        #         ch_ques_obj, created = TestQuestion.objects.update_or_create(id=chapter_question.pop('id'),
+        #                                                                      defaults=chapter_question)
+        #         if created:
+        #             test_questions.append(ch_ques_obj)
+        #
+        #     for non_chapter_question in validated_data['get_non_chapter_questions']:
+        #         question_obj_data = non_chapter_question.pop('question')
+        #         choices_data = question_obj_data.pop('choices')
+        #         question_obj, created = Question.objects.update_or_create(id=question_obj_data.pop('id'),
+        #                                                                   defaults=question_obj_data)
+        #         for choice_data in choices_data:
+        #             choices_data['question'] = question_obj
+        #             option_obj, created = Option.objects.update_or_create(id=choices_data.pop('id'),
+        #                                                                   defaults=choice_data)
+        #
+        #         non_chapter_question['question'] = question_obj
+        #         non_ch_ques_obj, created = TestQuestion.objects.update_or_create(id=non_chapter_question.pop('id'),
+        #                                                                          defaults=non_chapter_question)
+        #         if created:
+        #             test_questions.append(
+        #                 non_ch_ques_obj
+        #             )
+        #     instance.questions.add(*test_questions)
+        #
+        # return instance

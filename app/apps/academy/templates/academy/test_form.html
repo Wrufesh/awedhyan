@@ -56,8 +56,8 @@
                 };
                 ko.mapping.fromJS(initialData, mapping, vm);
             }
-{#            vm.course_subscribe_function();#}
-{#            vm.update_selected_chapter_questions();#}
+            {#            vm.course_subscribe_function();#}
+            {#            vm.update_selected_chapter_questions();#}
         });
     </script>
     <script type="text/javascript" src="{% static 'public/plugins/knockout/dist/knockout.js' %}"></script>
@@ -194,8 +194,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="col-12">
                                 {{ forms.question_form.type.label }}
@@ -231,10 +229,6 @@
                             <div class="col-12">
                                 <button data-bind="click: add_choice, visible: choices().length > 0"
                                         class="btn btn-primary btn-sm">{% trans 'Add Choice' %}</button>
-                                <button type="button" data-bind="click: $root.remove_non_chapter_question"
-                                        class="btn btn-danger btn-sm float-right">
-                                    {% trans 'Remove Question' %}
-                                </button>
                             </div>
 
                         </div>
@@ -242,9 +236,22 @@
 
                     </div>
                     <!-- /ko -->
-                    <div class="float-right mx-3 col-12">
-                        Points: <input type="number" data-bind="value: points, attr: {'name': 'nchp' + id()}" required>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="float-left">
+                                Points: <input type="number" data-bind="value: points, attr: {'name': 'nchp' + id()}"
+                                               required>
+                            </div>
+
+                        </div>
+                        <div class="col-6">
+                            <button type="button" data-bind="click: $parent.remove_non_chapter_question"
+                                    class="btn btn-danger btn-sm float-right">
+                                {% trans 'Remove Question' %}
+                            </button>
+                        </div>
                     </div>
+
                 </div>
                 <button data-bind="click: add_non_chapter_question"
                         class="btn btn-primary">{% trans 'Add Question' %}</button>

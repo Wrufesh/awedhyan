@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
-from .models import ChapterPage, Question, Test, TestQuestion
+from .models import ChapterPage, Question, Test, TestQuestion, Option
 from .serializers import QuestionSerializer, ChapterPageSerializer, TestSerializer
 
 
@@ -41,8 +41,6 @@ class TestViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = json.loads(request.data)
-        # Todo Below line should be moved to update
-        # TestQuestion.objects.filter(id__in=data.get('test_questions_to_delete')).delete()
         serializer = TestSerializer(data=data)
         if serializer.is_valid():
             serializer.save(created_by=request.user)
@@ -52,11 +50,19 @@ class TestViewset(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         data = json.loads(request.data)
+
+        # Delete Removed
+        # TODO update test question to delete from js
+        TestQuestion.objects.filter(id__in=data.get('test_questions_to_delete')).delete()
+        for test_question in data.get('non_chapter_questions'):
+            choices_to_delete = test_question.get('question').get('choices_to_delete')
+            Option.objects.filter(id__in=choices_to_delete)
+
         test_id = kwargs.get('pk')
         test_obj = Test.objects.get(id=test_id)
         serializer = TestSerializer(test_obj, data=data, many=False)
         if serializer.is_valid():
-            serializer.save(test_obj)
+            serializer.save()
             return Response(data={}, status=201)
         else:
             return Response(data=serializer.errors, status=406)

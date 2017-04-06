@@ -9,15 +9,12 @@ from rest_framework.fields import SkipField
 
 class Base64FieldMixin(object):
     def _decode(self, data):
-        # print(data.get('dataURL'))
-        # print(data.get('fileArray'))
         if data.get('fileArray'):
             data = data.get('dataURL')
         else:
-            data = ''
+            data = None
         if isinstance(data, str) and data.startswith('data:'):
             # base64 encoded file - decode
-            # print(data)
             format, datastr = data.split(';base64,')  # format ~= data:image/X,
             ext = format.split('/')[-1]  # guess file extension
 
@@ -33,7 +30,6 @@ class Base64FieldMixin(object):
 
     def to_internal_value(self, data):
         data = self._decode(data)
-        print(type(data))
         return super(Base64FieldMixin, self).to_internal_value(data)
 
 
