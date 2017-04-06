@@ -209,7 +209,7 @@ function Test() {
             if (self.id()){
                 var url = '/academy/test/update/' + String(self.id()) + '/';
             }else{
-                var url = '/academy/test/create/';
+                var url = '/api/test/';
             }
 
 
@@ -227,7 +227,7 @@ function Test() {
                 );
                 App.hideProcessing();
             };
-            App.remoteMultipartPost(url, payload, defaultCallback, failureCallback);
+            App.remotePost(url, payload, defaultCallback, failureCallback);
         }
     };
 

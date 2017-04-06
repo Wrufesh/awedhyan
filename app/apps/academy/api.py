@@ -1,9 +1,11 @@
+import json
+
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
-from .models import ChapterPage, Question
-from .serializers import QuestionSerializer, ChapterPageSerializer
+from .models import ChapterPage, Question, Test, TestQuestion
+from .serializers import QuestionSerializer, ChapterPageSerializer, TestSerializer
 
 
 # class ChapterQuestionViewSet(viewsets.ViewSet):
@@ -19,7 +21,7 @@ from .serializers import QuestionSerializer, ChapterPageSerializer
 #         pass
 #
 
-class CourseChapterPageViewset(viewsets.ReadOnlyModelViewSet):
+class CourseChapterPageViewset(viewsets.ModelViewSet):
     queryset = ChapterPage.objects.all()
     serializer_class = ChapterPageSerializer
     permission_classes = []
@@ -30,3 +32,24 @@ class CourseChapterPageViewset(viewsets.ReadOnlyModelViewSet):
         if course_id:
             queryset = queryset.filter(course__id=course_id)
         return queryset
+
+
+class TestViewset(viewsets.ModelViewSet):
+    queryset = Test.objects.all()
+    serializer_class = TestSerializer
+    permission_classes = []
+
+    def create(self, request, *args, **kwargs):
+        data = json.loads(request.data)
+        # Todo Below line should be moved to update
+        # TestQuestion.objects.filter(id__in=data.get('test_questions_to_delete')).delete()
+        serializer = TestSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(created_by=request.user)
+            return Response(data={}, status=201)
+        else:
+            return Response(data=serializer.errors, status=406)
+
+    def update(self, request, *args, **kwargs):
+        data = json.loads(request.data)
+        pass

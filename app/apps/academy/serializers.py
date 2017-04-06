@@ -1,9 +1,12 @@
 import base64
+
+from django.db import transaction
 from django.utils.regex_helper import Choice
-from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
+from rest_framework.fields import CurrentUserDefault
 
 from app.utilities import base64_content_file
+from app.utils.fields import Base64ImageField
 from .models import Test, Question, Option, TestQuestion, Course, ChapterPage
 
 
@@ -16,17 +19,6 @@ class ChoiceSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     choices = ChoiceSerializer(many=True)
     image = Base64ImageField(required=False)
-
-    def validate_image(self, value):
-        import ipdb
-        ipdb.set_trace()
-        # if value.get('fileArray', None):
-        #     if value.get('dataURL', None):
-        #         return value.get('dataURL')
-        #     else:
-        #         raise serializers.ValidationError("No file data present")
-        # else:
-        #     return None
 
     class Meta:
         model = Question
@@ -65,21 +57,44 @@ class TestSerializer(serializers.ModelSerializer):
     non_chapter_questions = TestQuestionDetailSerializer(source='get_non_chapter_questions', many=True)
     chapter_questions = TestQuestionMinSerializer(source='get_chapter_questions', many=True)
 
-    # course = CourseSerializer(many=False)
-
     class Meta:
         model = Test
         fields = ('id', 'name', 'course', 'pass_mark', 'non_chapter_questions', 'chapter_questions')
 
-    # def create(self, validated_data):
-    #     test = Test.objects.create(**{
-    #         'name': validated_data.get('name'),
-    #         'course': validated_data.get('course'),
-    #         'pass_mark': validated_data.get('pass_mark')
-    #     })
-    #     # TODO save non_chapter_questions and chapter questions
-    #
-    #     return test
-    #
-    # def update(self, instance, validated_data):
-    #     pass
+    def create(self, validated_data):
+
+        with transaction.atomic():
+            test = Test.objects.create(**{
+                'name': validated_data.get('name'),
+                'course': validated_data.get('course'),
+                'pass_mark': validated_data.get('pass_mark'),
+                'created_by': validated_data.get('created_by')
+            })
+
+            test_questions = []
+            for chapter_question in validated_data['get_chapter_questions']:
+                test_questions.append(TestQuestion.objects.create(**chapter_question))
+            for non_chapter_question in validated_data['get_non_chapter_questions']:
+                question_obj_data = non_chapter_question.pop('question')
+                choices_data = question_obj_data.pop('choices')
+                question_obj = Question.objects.create(**question_obj_data)
+                for choice_data in choices_data:
+                    Option.objects.create(question=question_obj, **choice_data)
+                test_questions.append(
+                    TestQuestion.objects.create(
+                        question=question_obj,
+                        points=non_chapter_question.get('points')
+                    )
+                )
+            test.questions.add(*test_questions)
+
+        return test
+
+    def update(self, instance, validated_data):
+        pass
+
+        # def save(self, **kwargs):
+        #     import ipdb
+        #     ipdb.set_trace()
+        #     self.validated_data['created_by_id'] = CurrentUserDefault().id
+        #     super(TestSerializer, self).save(**kwargs)

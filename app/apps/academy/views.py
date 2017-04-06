@@ -13,7 +13,7 @@ from app.utils.mixins import DeleteView, UpdateView, CreateView, LoginRequiredMi
 from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm, \
     QuestionForm, OptionForm, TestCreateForm
 from .models import BoardOrUniversity, Faculty, Program, ProgramLevel, Institute, Course, ChapterPage, Question, Option, \
-    Test
+    Test, TestQuestion
 
 from django.views.generic import TemplateView
 
@@ -240,10 +240,8 @@ class ChapterQuestion(TemplateView, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         chapter_id = self.kwargs.get('chapter_id')
         chapter = ChapterPage.objects.get(id=chapter_id)
-        # import ipdb
-        # ipdb.set_trace()
         params = json.loads(request.body.decode())
-
+        # TODO move this logic to API
         with transaction.atomic():
 
             Question.objects.filter(id__in=params.get('questions_to_delete')).delete()
@@ -300,23 +298,5 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
 
         return context
 
-    def post(self, request, **kwargs):
-        data = json.loads(request.body.decode())
 
-        updated_non_chapter_questions = []
-        for test_question in data.get('non_chapter_questions'):
-            if test_question.get('question').get('image').get('fileArray'):
-                test_question['question']['image'] = test_question.get('question').get('image').get('dataURL')
-            else:
-                test_question['question'].pop('image')
-
-            updated_non_chapter_questions.append(test_question)
-        data['non_chapter_questions'] = updated_non_chapter_questions
-
-        ser = TestSerializer(data=data)
-        if ser.is_valid():
-            ser.create(ser.data)
-            return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'success': False, 'errors': ser.errors})
 

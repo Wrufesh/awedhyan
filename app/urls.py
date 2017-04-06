@@ -22,7 +22,7 @@ from django.contrib import admin
 
 # from app.apps.academy.api import ChapterQuestionViewSet
 from app.apps.academy import urls as academy_urls
-from app.apps.academy.api import CourseChapterPageViewset
+from app.apps.academy.api import CourseChapterPageViewset, TestViewset
 from app.apps.users import urls as users_urls
 
 from rest_framework.routers import DefaultRouter
@@ -30,6 +30,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 # router.register(r'chapterquestion', ChapterQuestionViewSet, base_name='chapterquestion')
 router.register(r'coursechapters', CourseChapterPageViewset, base_name='coursechapters')
+router.register(r'test', TestViewset, base_name='test')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
