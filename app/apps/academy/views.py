@@ -318,6 +318,8 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
             test = Test.objects.get(id=test_id)
             serializer = TestSerializer(test, many=False)
             context['initial_data'] = serializer.data
+        else:
+            context['initial_data'] = None
 
         context['forms'] = {
             'test_create_form': TestCreateForm(),

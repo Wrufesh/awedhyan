@@ -76,7 +76,7 @@ function Question() {
             self.choices_to_delete.push(choice.id());
         }
         self.choices.remove(choice);
-    }
+    };
 
     // self.errors.subscribe(function () {
     //     if(self.errors.length > 0){
@@ -109,6 +109,7 @@ function Test() {
     self.test_questions_to_delete = ko.observableArray();
 
     self.update_selected_chapter_questions = function () {
+        console.log('updating chapter question');
         var new_chapter_questions = [];
         ko.utils.arrayForEach(self.selected_course_chapter_questions(), function (chapter) {
             ko.utils.arrayForEach(chapter.questions, function (question) {
@@ -117,7 +118,7 @@ function Test() {
                         'id': question.test_question_id(),
                         'question': question.id,
                         'chapter': chapter.id,
-                        'points': question.points
+                        'points': question.points()
                     };
                     new_chapter_questions.push(new TestChapterQuestion(data))
                 } else {
@@ -130,7 +131,10 @@ function Test() {
         self.chapter_questions(new_chapter_questions)
     };
 
-    self.course.subscribe(function () {
+    // self.chapter_questions.subscribe(function () {
+    //     self.update_selected_chapter_questions()
+    // });
+    self.course_subscribe_function = function () {
         if (self.course()) {
             get_course_chapters(self.course(), function (response) {
                 console.log(response);
@@ -140,8 +144,8 @@ function Test() {
                         question.test_question_id = ko.observable()
                         question['is_selected'] = ko.observable();
                         question['points'] = ko.observable();
-                        question.points.subscribe(self.update_selected_chapter_questions);
-                        question.is_selected.subscribe(self.update_selected_chapter_questions);
+                        // question.points.subscribe(self.update_selected_chapter_questions);
+                        // question.is_selected.subscribe(self.update_selected_chapter_questions);
 
                         return question
                     });
@@ -151,21 +155,27 @@ function Test() {
                     return chapter
                 });
                 self.selected_course_chapter_questions(modified_response)
-
-                ko.utils.arrayForEach(self.selected_course_chapter_questions(), function (chapter) {
-                    ko.utils.arrayForEach(chapter.questions, function (question) {
-                        ko.utils.arrayForEach(self.chapter_questions(), function (chapter_question) {
-                            if (chapter_question.question == question.id) {
-                                question.is_selected(true);
-                                question.points(chapter_question.points());
-                                question.test_question_id(chapter_question.id())
-                            }
-                        })
-                    })
-                });
             });
         }
-    });
+    };
+
+    self.selected_course_chapter_questions_subscribe_function = function () {
+        console.log('mapping chapter questions to loaded course chapter question')
+        ko.utils.arrayForEach(self.selected_course_chapter_questions(), function (chapter) {
+            ko.utils.arrayForEach(chapter.questions, function (question) {
+                ko.utils.arrayForEach(self.chapter_questions(), function (chapter_question) {
+                    if (chapter_question.question() == question.id) {
+                        question.is_selected(true);
+                        question.points(chapter_question.points());
+                        question.test_question_id(chapter_question.id())
+                    }
+                })
+            })
+        });
+    };
+
+    self.course.subscribe(self.course_subscribe_function);
+    self.selected_course_chapter_questions.subscribe(self.selected_course_chapter_questions_subscribe_function);
 
     self.add_non_chapter_question = function () {
         self.non_chapter_questions.push(new TestNonChapterQuestion());
@@ -201,14 +211,16 @@ function Test() {
     };
 
     self.save = function () {
+        self.update_selected_chapter_questions();
+        debugger;
         if (self.validation()) {
             // App.showProcessing();
             var payload = ko.toJSON(self);
             // var payload = ko.toJS(self);
             console.log(payload);
-            if (self.id()){
+            if (self.id()) {
                 var url = '/academy/test/update/' + String(self.id()) + '/';
-            }else{
+            } else {
                 var url = '/api/test/';
             }
 
