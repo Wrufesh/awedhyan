@@ -216,6 +216,35 @@ class ChapterDelete(ChapterView, DeleteView):
     pass
 
 
+class TestView(LoginRequiredMixin):
+    model = Test
+    success_url = reverse_lazy('aadhyan:test_list')
+    form_class = ChapterForm
+
+    # def get_queryset(self):
+    #     course_id = self.kwargs.get('course_id')
+    #     if course_id:
+    #         return Course.objects.get(id=course_id).chapters.all()
+    #     else:
+    #         return []
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(ChapterView, self).get_context_data(**kwargs)
+    #     context['course_id'] = self.kwargs.get('course_id')
+    #     return context
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('aadhyan:test_list')
+
+
+class TestListView(TestView, ListView):
+    pass
+
+
+class TestDeleteView(TestView, DeleteView):
+    pass
+
+
 class TestView(TemplateView, LoginRequiredMixin):
     template_name = 'academy/test.html'
 
@@ -297,6 +326,3 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
         }
 
         return context
-
-
-

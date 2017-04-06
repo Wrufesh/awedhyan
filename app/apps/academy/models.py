@@ -172,6 +172,9 @@ class Test(models.Model):
     def get_non_chapter_questions(self):
         return self.questions.all().filter(chapter__isnull=True)
 
+    def __str__(self):
+        return self.name
+
 pre_delete.connect(delete_test_question, sender=Test)
 
 
