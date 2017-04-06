@@ -169,6 +169,7 @@ class TestQuestionAnswer(models.Model):
     # below two activates when question type is of essay
     essay_answer = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to='answers/', height_field=None, width_field=None, null=True, blank=True)
+    points = models.PositiveIntegerField()
 
     @classmethod
     def get_auto_computable_marks(cls, test_obj, student):
