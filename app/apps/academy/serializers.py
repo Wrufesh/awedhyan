@@ -5,7 +5,6 @@ from django.utils.regex_helper import Choice
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
-from app.utilities import base64_content_file
 from app.utils.fields import Base64ImageField
 from .models import Test, Question, Option, TestQuestion, Course, ChapterPage
 
@@ -91,10 +90,6 @@ class TestSerializer(serializers.ModelSerializer):
         return test
 
     def update(self, instance, validated_data):
+        import ipdb
+        ipdb.set_trace()
         pass
-
-        # def save(self, **kwargs):
-        #     import ipdb
-        #     ipdb.set_trace()
-        #     self.validated_data['created_by_id'] = CurrentUserDefault().id
-        #     super(TestSerializer, self).save(**kwargs)

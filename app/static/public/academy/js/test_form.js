@@ -212,14 +212,13 @@ function Test() {
 
     self.save = function () {
         self.update_selected_chapter_questions();
-        debugger;
         if (self.validation()) {
             // App.showProcessing();
             var payload = ko.toJSON(self);
             // var payload = ko.toJS(self);
             console.log(payload);
             if (self.id()) {
-                var url = '/academy/test/update/' + String(self.id()) + '/';
+                var url = '/api/test/' + String(self.id()) + '/';
             } else {
                 var url = '/api/test/';
             }
@@ -239,7 +238,11 @@ function Test() {
                 );
                 App.hideProcessing();
             };
-            App.remotePost(url, payload, defaultCallback, failureCallback);
+            if(self.id()){
+                App.remotePut(url, payload, defaultCallback, failureCallback);
+            }else{
+                App.remotePost(url, payload, defaultCallback, failureCallback);
+            }
         }
     };
 

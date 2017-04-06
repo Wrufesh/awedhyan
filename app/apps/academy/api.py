@@ -52,4 +52,12 @@ class TestViewset(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         data = json.loads(request.data)
+        test_id = kwargs.get('pk')
+        test_obj = Test.objects.get(id=test_id)
+        serializer = TestSerializer(test_obj, data=data, many=False)
+        if serializer.is_valid():
+            serializer.save(test_obj)
+            return Response(data={}, status=201)
+        else:
+            return Response(data=serializer.errors, status=406)
         pass
