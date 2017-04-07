@@ -1,9 +1,8 @@
-from ckeditor.fields import RichTextField
-from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils.translation import ugettext as _
+from redactor.fields import RedactorField
 
 from app.apps.academy.signal_receivers import delete_question_choice, delete_non_chapter_question, delete_test_question
 
@@ -122,7 +121,7 @@ class ChapterPage(models.Model):
     name = models.CharField(max_length=128)
     course = models.ForeignKey(Course, related_name="chapters")
 
-    content = RichTextUploadingField()
+    content = RedactorField()
 
     questions = models.ManyToManyField(Question,blank=True)
 

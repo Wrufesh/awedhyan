@@ -4,14 +4,12 @@
 
 {% block page-title %}{{ scenario }} {{ form.instance }}{% endblock %}
 {% block extra_js %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    {{ form.media }}
 {% endblock %}
 
 {% block content %}
     <form method="POST">
         {% csrf_token %}
-
         {{ form.non_field_errors }}
         {{ form.as_p }}
 

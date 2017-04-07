@@ -1,4 +1,3 @@
-from ckeditor.widgets import CKEditorWidget
 from django import forms
 from app.apps.academy.models import BoardOrUniversity, Faculty, Program, ProgramLevel, Course, Institute, ChapterPage, \
     Option, Question, Test
@@ -61,11 +60,6 @@ class ChapterForm(HTML5BootstrapModelForm):
     class Meta:
         model = ChapterPage
         exclude = ('questions', )
-
-        widgets = {
-            'content': CKEditorWidget(attrs={'width': '100'})
-        }
-
 
 
 class OptionForm(HTML5BootstrapModelForm):
