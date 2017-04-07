@@ -1,3 +1,5 @@
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_delete
@@ -119,6 +121,9 @@ pre_delete.connect(delete_question_choice, sender=Question)
 class ChapterPage(models.Model):
     name = models.CharField(max_length=128)
     course = models.ForeignKey(Course, related_name="chapters")
+
+    content = RichTextUploadingField()
+
     questions = models.ManyToManyField(Question,blank=True)
 
     def __str__(self):

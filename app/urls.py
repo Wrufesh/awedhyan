@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^academy/', include(academy_urls, namespace='aadhyan')),
     url(r'^users/', include(users_urls)),
     url(r'^api/', include(router.urls)),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 
 ]
 
