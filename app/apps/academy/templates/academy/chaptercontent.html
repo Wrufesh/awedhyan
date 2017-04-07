@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block page-title %}{{ scenario }} {{ form.instance }}{% endblock %}
+{% block extra_js %}
+    {#    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>#}
+    {#    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>#}
+{% endblock %}
+
+{% block content %}
+    <div class="row card">
+        <div class="col-12">
+            <a href="{% url 'aadhyan:chapter_quiz'  object.id %}"
+               class="btn btn-primary float-right">{% trans 'Chapter Quiz' %}</a>
+        </div>
+        <div class="col-12">
+            {{ object.content | safe }}
+        </div>
+    </div>
+
+
+{% endblock %}

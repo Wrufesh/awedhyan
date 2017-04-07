@@ -58,4 +58,7 @@ urlpatterns = [
     url(r'^chapter/quiz/(?P<chapter_id>[0-9]+)/$$', QuizView.as_view(), name='chapter_quiz'),
     url(r'^test/quiz/(?P<test_id>[0-9]+)/$$', QuizView.as_view(), name='test_quiz'),
 
+    # Chapter content
+    url(r'^chapter/content/(?P<chapter_id>[0-9]+)/$$', ChapterContentView.as_view(), name='chapter_content'),
+
 ]

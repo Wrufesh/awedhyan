@@ -414,7 +414,7 @@ class QuizView(TemplateView, LoginRequiredMixin):
     def get_context_data(self, **kwargs):
         context = super(QuizView, self).get_context_data(**kwargs)
         test_id = self.kwargs.get('test_id', None)
-        chapter_id = self.kwargs.get('chapter', None)
+        chapter_id = self.kwargs.get('chapter_id', None)
 
         if test_id:
             test = Test.objects.get(id=test_id)
@@ -427,4 +427,18 @@ class QuizView(TemplateView, LoginRequiredMixin):
         else:
             context['test_questions'] = None
             context['chapter_questions'] = None
+        return context
+
+
+class ChapterContentView(TemplateView, LoginRequiredMixin):
+    template_name = 'academy/chaptercontent.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ChapterContentView, self).get_context_data(**kwargs)
+        chapter_id = self.kwargs.get('chapter_id', None)
+        if chapter_id:
+            chapter_page_obj = ChapterPage.objects.get(id=chapter_id)
+            context['object'] = chapter_page_obj
+        else:
+            context['object'] = None
         return context
