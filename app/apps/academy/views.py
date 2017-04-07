@@ -427,6 +427,9 @@ class QuizView(TemplateView, LoginRequiredMixin):
         else:
             context['test_questions'] = None
             context['chapter_questions'] = None
+            context['student_id'] = self.request.user.id
+            context['test_id'] = test_id
+            context['chapter_id'] = chapter_id
         return context
 
 

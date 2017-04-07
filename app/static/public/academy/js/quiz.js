@@ -48,5 +48,6 @@ function TestQuestionAnswer(){
 
 function Quiz(){
     var self = this;
-    self.answers = ko.observableArray()
+    self.quiz_questions = ko.observableArray();
+    self.quiz_answers = ko.observableArray();
 }
