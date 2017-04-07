@@ -62,6 +62,10 @@ class ChapterForm(HTML5BootstrapModelForm):
         model = ChapterPage
         exclude = ('questions', )
 
+        widgets = {
+            'content': CKEditorWidget(attrs={'width': '100'})
+        }
+
 
 
 class OptionForm(HTML5BootstrapModelForm):
