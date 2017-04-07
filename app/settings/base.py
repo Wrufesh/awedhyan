@@ -146,8 +146,31 @@ REDACTOR_UPLOAD = 'redactor_uploads/'
 REDACTOR_OPTIONS = {
     'lang': 'en',
     'plugins': [
-        # 'table'
-    ]
+        # 'counter',
+        'codemirror',
+        'table',
+        'video',
+        'alignment',
+        'fontsize',
+        'fontcolor',
+        'source',
+        'fullscreen',
+        'fontfamily',
+
+    ],
+    # 'codemirror': {
+    #                 'lineNumbers': True,
+    #                 'mode': 'xml',
+    #                 'indentUnit': 4
+    #             }
+    # 'callbacks': {
+    #     'counter': """function(data)
+    #                 {
+    #                     console.log('Words: ' + data.words);
+    #                     console.log('Characters: ' + data.characters);
+    #                     console.log('Characters w/o spaces: ' + (data.characters - data.spaces));
+    #                 }"""
+    # }
 }
 REDACTOR_UPLOAD_HANDLER = 'redactor.handlers.DateDirectoryUploader'
 REDACTOR_AUTH_DECORATOR = 'django.contrib.auth.decorators.login_required'
