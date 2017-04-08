@@ -133,7 +133,6 @@ class Test(models.Model):
     name = models.CharField(max_length=250)
     course = models.ForeignKey(Course)
     pass_mark = models.PositiveIntegerField()
-    # questions = models.ManyToManyField(TestQuestion)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tests')
@@ -167,14 +166,16 @@ class Option(models.Model):
 
 class TestQuestionAnswer(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='test_question_answers')
-    test = models.ForeignKey(Test, related_name='test_question_answers')
+    # test = models.ForeignKey(Test, related_name='test_question_answers')
     test_question = models.ForeignKey(TestQuestion, related_name='test_question_answers')
     true_false_answer = models.BooleanField(default=False)
     option_answers = models.ManyToManyField(Option)
     # below two activates when question type is of essay
-    essay_answer = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to='answers/', height_field=None, width_field=None, null=True, blank=True)
+    essay_answer_content = RedactorField(blank=True, null=True)
     points = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together= ('student', 'test_question')
 
     @classmethod
     def get_auto_computable_marks(cls, test_obj, student):

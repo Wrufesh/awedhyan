@@ -1,4 +1,6 @@
 from django import forms
+from redactor.widgets import RedactorEditor
+
 from app.apps.academy.models import BoardOrUniversity, Faculty, Program, ProgramLevel, Course, Institute, ChapterPage, \
     Option, Question, Test
 from app.utils.forms import HTML5BootstrapModelForm
@@ -112,3 +114,16 @@ class TestCreateForm(HTML5BootstrapModelForm):
             'course' : forms.Select(attrs={'data-bind': 'value: course'}),
             'pass_mark' : forms.NumberInput(attrs={'data-bind': 'value: pass_mark'})
         }
+
+
+class EssayAnswerContentForm(forms.Form):
+    essay_answer_content = forms.CharField(widget=RedactorEditor(
+        attrs={
+            'data-bind': 'value: essay_answer_content'
+        },
+        verbose_name=_('Essay Answer Content'),
+        redactor_options={'lang': 'en', 'focus': True},
+        # upload_to='essay_answer/',
+        # allow_file_upload=True,
+        # allow_image_upload=True
+    ))

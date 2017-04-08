@@ -1,4 +1,6 @@
 import json
+
+from braces.views import GroupRequiredMixin
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
@@ -9,12 +11,12 @@ from django.views.generic import ListView
 from rest_framework.response import Response
 
 from app.utils.utilities import base64_content_file
-from .serializers import QuestionSerializer, TestSerializer, TestQuestionDetailSerializer
+from .serializers import QuestionSerializer, TestSerializer, TestQuestionDetailSerializer, TestQuestionAnswerSerializer
 from app.utils.mixins import DeleteView, UpdateView, CreateView, LoginRequiredMixin
 from .forms import BoardForm, FacultyForm, ProgramForm, ProgramLevelForm, InstituteForm, CourseForm, ChapterForm, \
-    QuestionForm, OptionForm, TestCreateForm
+    QuestionForm, OptionForm, TestCreateForm, EssayAnswerContentForm
 from .models import BoardOrUniversity, Faculty, Program, ProgramLevel, Institute, Course, ChapterPage, Question, Option, \
-    Test, TestQuestion
+    Test, TestQuestion, TestQuestionAnswer
 
 from django.views.generic import TemplateView
 
@@ -412,32 +414,51 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
 
                 # test_questions.append(non_chapter_question_obj)
 
-            # test.questions.add(*test_questions)
+                # test.questions.add(*test_questions)
         return JsonResponse({'success': True})
 
 
-class QuizView(TemplateView, LoginRequiredMixin):
+class QuizView(TemplateView, LoginRequiredMixin, GroupRequiredMixin):
     template_name = 'academy/quiz.html'
+    group_required = ('Student', 'CourseInstructor')
 
     def get_context_data(self, **kwargs):
         context = super(QuizView, self).get_context_data(**kwargs)
+
+        role = 'Student' if self.request.user.groups.filter(name='Student').exists() else 'CourseInstructor'
+        context['role'] = role
+        if role == 'CourseInstructor':
+            context['student_id'] = self.request.GET.get('student_id')
+        else:
+            context['student_id'] = self.request.user.id
+
         test_id = self.kwargs.get('test_id', None)
         chapter_id = self.kwargs.get('chapter_id', None)
 
-        if test_id:
+        if test_id and context['student_id']:
+            test_question_answers = TestQuestionAnswer.objects.filter(student_id=self.request.user.id,                                                          test_question__test_id=test_id)
+            test_qa_ser = TestQuestionAnswerSerializer(data=test_question_answers, many=True)
+            context['test_question_answers'] = test_qa_ser.data
             test = Test.objects.get(id=test_id)
-            test_question_serializer = TestQuestionDetailSerializer(test, many=True)
+            test_questions = test.questions.all().exclude(test_question_answers__in=test_question_answers)
+            test_question_serializer = TestQuestionDetailSerializer(test_questions, many=True)
             context['test_questions'] = test_question_serializer.data
+            context['test_obj'] = test
         elif chapter_id:
-            chapter_questions = ChapterPage.objects.get(id=chapter_id).questions.all()
+            chapter_obj = ChapterPage.objects.get(id=chapter_id)
+            chapter_questions = chapter_obj.questions.all()
             chapter_question_serializer = QuestionSerializer(chapter_questions, many=True)
             context['chapter_questions'] = chapter_question_serializer.data
-        else:
-            context['test_questions'] = None
-            context['chapter_questions'] = None
-            context['student_id'] = self.request.user.id
-            context['test_id'] = test_id
-            context['chapter_id'] = chapter_id
+            context['chapter_name'] = chapter_obj.name
+            context['course_name'] = chapter_obj.course.name
+
+        context['test_id'] = test_id
+        context['chapter_id'] = chapter_id
+        context['essay_answer_component_form'] = EssayAnswerContentForm()
+        # if test_question_answers present its incomplete quiz or completed
+        # completed when size of test_question_answers == size of total test question
+
+
         return context
 
 

@@ -8,13 +8,15 @@
 {% block extra_js %}
     <script>
         $(document).ready(function () {
-            var test_questions = {{ test_questions | jsonify }};
-            var chapter_questions = {{ chapter_questions | jsonify }};
+            var test_id = {{ test_id | jsonify }};
+            var chapter_id = {{ chapter_id | jsonify }};
             var vm = new Quiz();
             ko.applyBindings(vm);
-            if (test_questions) {
-                var test_quiz_questions = ko.utils.arrayMap(test_questions, function (test_question) {
-                    var test_question_mapping = {
+            if (test_id) {
+                var test_questions = {{ test_questions | jsonify }};
+                var test_question_answers = {{ test_question_answers | jsonify }};
+
+                var test_question_mapping = {
                         question: {
                             update: function (options) {
                                 var t_question_mapping = {
@@ -28,15 +30,29 @@
                             }
                         }
                     };
-                    var quiz_ques = ko.mapping.fromJS(test_question, test_question_mapping, new QuizQuestion());
-                    quiz_ques.test({{ test_id | jsonify }});
-                    quiz_ques.student({{ student_id | jsonify }});
-                    return quiz_ques;
+                var completed_test_qas = ko.utils.arrayMap(test_question_answers, function (completed_test_qa) {
+                    var tq_mapping = {
+                        'test_question': {
+                            update: function (options) {
+                                ko.mapping.fromJS(options.data, test_question_mapping, new TestQuestion())
+                            }
+                        }
+                    };
+                return ko.mapping.fromJS(completed_test_qa, tq_mapping, new TestQuestionAnswer())
                 });
-                vm.quiz_questions(test_quiz_questions);
-            } else if (chapter_questions) {
+
+                var test_quiz_questions = ko.utils.arrayMap(test_questions, function (test_question) {
+                    var test_question_answer = new TestQuestionAnswer();
+                    test_question_answer.test_question = ko.mapping.fromJS(test_question, test_question_mapping, new TestQuestion());
+                    return test_question_answer
+                });
+                vm.test_question_answers(test_quiz_questions);
+            } else if (chapter_id ){
+                var chapter_questions = {{ chapter_questions | jsonify }};
+
                 var chapter_quiz_questions = ko.utils.arrayMap(chapter_questions, function (chapter_question) {
-                    var quiz_question = new QuizQuestion();
+                    var test_question_answer = new TestQuestionAnswer();
+                    test_question_answer.test_question = new TestQuestion();
                     var ch_question_mapping = {
                         'choices': {
                             create: function (options) {
@@ -44,12 +60,12 @@
                             }
                         }
                     };
-                    quiz_question.question = ko.mapping.fromJS(chapter_question, ch_question_mapping, new Question());
-                    quiz_question.points(1);
-                    quiz_question.student({{ student_id | jsonify }});
-                    return quiz_question;
+                    test_question_answer.test_question.question = ko.mapping.fromJS(chapter_question, ch_question_mapping, new Question());
+                    test_question_answer.test_question.points(1);
+                    test_question_answer.test_question.student({{ student_id | jsonify }});
+                    return test_question_answer;
                 });
-                vm.quiz_questions(chapter_quiz_questions);
+                vm.test_question_answers(chapter_quiz_questions);
             }
 
         });

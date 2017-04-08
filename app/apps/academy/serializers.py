@@ -60,3 +60,10 @@ class TestSerializer(serializers.ModelSerializer):
         model = Test
         fields = ('id', 'name', 'course', 'pass_mark', 'non_chapter_questions', 'chapter_questions')
 
+
+class TestQuestionAnswerSerializer(serializers.ModelSerializer):
+    test_question = TestQuestionDetailSerializer(many=False)
+    option_answers = ChoiceSerializer(many=True)
+    class Meta:
+        model = TestQuestionAnswer
+        fields = ('id', 'student', 'test_question', 'true_false_answer', 'option_answers', 'essay_answer', 'image', 'points')
