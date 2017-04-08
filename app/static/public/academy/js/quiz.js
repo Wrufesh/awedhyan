@@ -21,21 +21,24 @@ function Question() {
     self.choices = ko.observableArray();
 }
 
-function QuizQuestion(){
+// function QuizQuestion(){
+//     var self = this;
+//     // below is test question id
+//     self.id = ko.observable();
+//     self.question = ko.observable();
+//     self.points = ko.observable();
+//     self.test = ko.observable();
+//     self.student = ko.observable();
+// }
+
+function TestQuestion(){
     var self = this;
+    self.id = ko.observable();
     self.question = ko.observable();
     self.points = ko.observable();
     self.test = ko.observable();
     self.student = ko.observable();
-}
-
-function TestQuestionAnswer(){
-    var self = this;
-    self.student = ko.observable();
-    self.test = ko.observable();
-    self.test_question = ko.observable();
     self.true_false_answer = ko.observable();
-    self.option_answers = ko.observableArray();
     self.option_answers = ko.observableArray();
     self.essay_answer = ko.observable();
     self.image = ko.observable({

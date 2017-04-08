@@ -129,19 +129,11 @@ class ChapterPage(models.Model):
         return '%s-%s' % (self.name, self.course)
 
 
-class TestQuestion(models.Model):
-    chapter = models.ForeignKey(ChapterPage, null=True, blank=True)
-    question = models.ForeignKey(Question, related_name='tests')
-    points = models.PositiveIntegerField()
-
-pre_delete.connect(delete_non_chapter_question, sender=TestQuestion)
-
-
 class Test(models.Model):
     name = models.CharField(max_length=250)
     course = models.ForeignKey(Course)
     pass_mark = models.PositiveIntegerField()
-    questions = models.ManyToManyField(TestQuestion)
+    # questions = models.ManyToManyField(TestQuestion)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tests')
@@ -156,6 +148,15 @@ class Test(models.Model):
         return self.name
 
 pre_delete.connect(delete_test_question, sender=Test)
+
+
+class TestQuestion(models.Model):
+    test = models.ForeignKey(Test, related_name='questions')
+    chapter = models.ForeignKey(ChapterPage, null=True, blank=True)
+    question = models.ForeignKey(Question, related_name='tests')
+    points = models.PositiveIntegerField()
+
+pre_delete.connect(delete_non_chapter_question, sender=TestQuestion)
 
 
 class Option(models.Model):

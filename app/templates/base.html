@@ -10,14 +10,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>
         {% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}
-                {% block title_suffix %}{% endblock %}</title>
+        {% block title_suffix %}{% endblock %}</title>
     <meta name="description" content=""/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     {# Global stylesheets #}
     <link rel="stylesheet" type="text/css" href="{% static 'public/plugins/bootstrap/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'public/app/css/custom_global_styles.css' %}">
-{#    <link rel="stylesheet" type="text/css" href="{% static 'public/plugins/bootstrap/dist/css/bootstrap-reboot.min.css' %}">#}
+    {#    <link rel="stylesheet" type="text/css" href="{% static 'public/plugins/bootstrap/dist/css/bootstrap-reboot.min.css' %}">#}
 
     {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
@@ -28,10 +28,12 @@
 {% block header %}
     {% include 'partials/_header.html' %}
 {% endblock %}
-
-<div id="content" class="container">
-    {% block content %}{% endblock %}
+<div class="{% block container_parent_class %}{% endblock %}">
+    <div id="content" class="">
+        {% block content %}{% endblock %}
+    </div>
 </div>
+
 
 {% block footer %}
     {% include 'partials/_footer.html' %}

@@ -364,8 +364,9 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
                 chapter_question_obj.question_id = chapter_question_data.get('question')
                 chapter_question_obj.chapter_id = chapter_question_data.get('chapter')
                 chapter_question_obj.points = chapter_question_data.get('points')
+                chapter_question_obj.test = test
                 chapter_question_obj.save()
-                test_questions.append(chapter_question_obj)
+                # test_questions.append(chapter_question_obj)
 
             for non_chapter_question_data in data.get('non_chapter_questions'):
                 non_chapter_question_id = non_chapter_question_data.get('id')
@@ -406,11 +407,12 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
 
                 non_chapter_question_obj.question = question_obj
                 non_chapter_question_obj.points = non_chapter_question_data.get('points')
+                non_chapter_question_obj.test = test
                 non_chapter_question_obj.save()
 
-                test_questions.append(non_chapter_question_obj)
+                # test_questions.append(non_chapter_question_obj)
 
-            test.questions.add(*test_questions)
+            # test.questions.add(*test_questions)
         return JsonResponse({'success': True})
 
 
