@@ -48,6 +48,7 @@ class CourseForm(HTML5BootstrapModelForm):
     class Meta:
         model = Course
         fields = '__all__'
+        # exclude = ('contributed_by', 'institute')
         widgets = {
             'level': forms.Select(attrs={'class': 'selectize'}, ),
             'institute': forms.Select(attrs={'class': 'selectize'}, ),
@@ -59,7 +60,7 @@ class ChapterForm(HTML5BootstrapModelForm):
 
     class Meta:
         model = ChapterPage
-        exclude = ('questions', )
+        exclude = ('questions', 'course')
 
 
 class OptionForm(HTML5BootstrapModelForm):

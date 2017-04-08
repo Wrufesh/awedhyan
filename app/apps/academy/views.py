@@ -206,11 +206,19 @@ class ChapterList(ChapterView, ListView):
 
 
 class ChapterCreate(ChapterView, CreateView):
-    pass
+    def form_invalid(self, form):
+        response = super(ChapterCreate, self).form_valid(form)
+        self.object.course_id = self.kwargs.get('course_id')
+        self.objet.save()
+        return response
 
 
 class ChapterEdit(ChapterView, UpdateView):
-    pass
+    def form_invalid(self, form):
+        response = super(ChapterEdit, self).form_valid(form)
+        self.object.course_id = self.kwargs.get('course_id')
+        self.objet.save()
+        return response
 
 
 class ChapterDelete(ChapterView, DeleteView):

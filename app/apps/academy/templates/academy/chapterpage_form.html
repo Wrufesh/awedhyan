@@ -8,17 +8,25 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {{ form.as_p }}
+    <div class="row">
+        <div class="col-12">
+            <form method="POST">
 
-        <input type="submit" class='btn btn-primary' value="{% trans 'Save' %}">
+                <div class="col-12">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    {{ form.as_p }}
+                </div>
+                <div class="col-12">
+                    <input type="submit" class='btn btn-outline-primary rounded-0' value="{% trans 'Save' %}">
 
-        {% if form.instance.id %}
-            <a href="{% url 'aadhyan:chapter_delete' course_id=course_id pk=form.instance.id %}"
-               class="btn btn-danger">{% trans 'Delete' %}</a>
-        {% endif %}
-    </form>
+                    {% if form.instance.id %}
+                        <a href="{% url 'aadhyan:chapter_delete' course_id=course_id pk=form.instance.id %}"
+                           class="btn btn-outline-danger rounded-0">{% trans 'Delete' %}</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}

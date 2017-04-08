@@ -10,8 +10,7 @@
         $(document).ready(function () {
             var test_questions = {{ test_questions | jsonify }};
             var chapter_questions = {{ chapter_questions | jsonify }};
-            vm = new Quiz();
-            debugger;
+            var vm = new Quiz();
             ko.applyBindings(vm);
             if (test_questions) {
                 var test_quiz_questions = ko.utils.arrayMap(test_questions, function (test_question) {
@@ -80,7 +79,7 @@
 
 {% block content %}
 
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+    <div id="carouselExampleControls" class="carousel" data-ride="carousel">
         <div class="carousel-inner" role="listbox">
             <div class="carousel-item active">
                 <div class="card">

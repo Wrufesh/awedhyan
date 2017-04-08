@@ -147,17 +147,17 @@ REDACTOR_OPTIONS = {
     'lang': 'en',
     'plugins': [
         # 'counter',
-        'codemirror',
+        # 'codemirror',
         'table',
         'video',
         'alignment',
-        'fontsize',
+        # 'fontsize',
         'fontcolor',
         'source',
-        'fullscreen',
-        'fontfamily',
-
+        'fullscreen'
     ],
+    'imageResizable': True,
+    'imagePosition': True,
     # 'codemirror': {
     #                 'lineNumbers': True,
     #                 'mode': 'xml',
