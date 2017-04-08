@@ -342,8 +342,6 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body.decode())
         test_id = self.kwargs.get('test_id', None)
-        import ipdb
-        ipdb.set_trace()
         with transaction.atomic():
             TestQuestion.objects.filter(id__in=data.get('test_questions_to_delete'))
             if data.get('id'):
