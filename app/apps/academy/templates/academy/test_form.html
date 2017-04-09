@@ -138,6 +138,9 @@
                                             Points: <input type="number"
                                                            data-bind="value: $data.points, attr:{'name': 'chqp' + $data.id}, disable: !$data.is_selected()"
                                                            required>
+                                            Duration : <input type="text"
+                                                              data-bind="value: $data.duration, attr:{'name': 'chqpd' + $data.id}, disable: !$data.is_selected()"
+                                                              placeholder="HH:MM:SS" required>
                                         </div>
 
                                     </div>
@@ -241,6 +244,9 @@
                             <div class="float-left">
                                 Points: <input type="number" data-bind="value: points, attr: {'name': 'nchp' + id()}"
                                                required>
+                                Duration : <input type="text"
+                                                  data-bind="value: duration, attr:{'name': 'chqpdp' + $data.id}"
+                                                  placeholder="HH:MM:SS" required>
                             </div>
 
                         </div>

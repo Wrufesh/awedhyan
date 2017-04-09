@@ -7,6 +7,8 @@ from django.core.files.images import ImageFile
 from django.db import transaction
 from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.utils.dateparse import parse_duration
+from django.utils.encoding import force_text
 from django.views.generic import ListView
 from rest_framework.response import Response
 
@@ -336,7 +338,7 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
         context['forms'] = {
             'test_create_form': TestCreateForm(),
             'question_form': QuestionForm(),
-            'choice_form': OptionForm()
+            'choice_form': OptionForm(),
         }
 
         return context
@@ -366,6 +368,7 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
                 chapter_question_obj.question_id = chapter_question_data.get('question')
                 chapter_question_obj.chapter_id = chapter_question_data.get('chapter')
                 chapter_question_obj.points = chapter_question_data.get('points')
+                chapter_question_obj.duration = parse_duration(force_text(chapter_question_data.get('duration')))
                 chapter_question_obj.test = test
                 chapter_question_obj.save()
                 # test_questions.append(chapter_question_obj)
@@ -409,6 +412,9 @@ class TestCreateEditView(TemplateView, LoginRequiredMixin):
 
                 non_chapter_question_obj.question = question_obj
                 non_chapter_question_obj.points = non_chapter_question_data.get('points')
+                non_chapter_question_obj.duration = parse_duration(
+                    force_text(non_chapter_question_data.get('duration')))
+                non_chapter_question_data.get('duration')
                 non_chapter_question_obj.test = test
                 non_chapter_question_obj.save()
 
@@ -436,7 +442,8 @@ class QuizView(TemplateView, LoginRequiredMixin, GroupRequiredMixin):
         chapter_id = self.kwargs.get('chapter_id', None)
 
         if test_id and context['student_id']:
-            test_question_answers = TestQuestionAnswer.objects.filter(student_id=self.request.user.id,                                                          test_question__test_id=test_id)
+            test_question_answers = TestQuestionAnswer.objects.filter(student_id=self.request.user.id,
+                                                                      test_question__test_id=test_id)
             test_qa_ser = TestQuestionAnswerSerializer(data=test_question_answers, many=True)
             context['test_question_answers'] = test_qa_ser.data
             test = Test.objects.get(id=test_id)

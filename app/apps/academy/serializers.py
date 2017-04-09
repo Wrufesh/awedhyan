@@ -29,13 +29,13 @@ class TestQuestionDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TestQuestion
-        fields = ('id', 'question', 'points')
+        fields = ('id', 'question', 'points', 'duration')
 
 
 class TestQuestionMinSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestQuestion
-        fields = ('id', 'question', 'chapter', 'points')
+        fields = ('id', 'question', 'chapter', 'points', 'duration')
 
     def create(self, validated_data):
         TestQuestion.objects.create(**validated_data)

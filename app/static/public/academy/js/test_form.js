@@ -27,6 +27,7 @@ function TestChapterQuestion(data) {
     self.question = ko.observable();
     self.chapter = ko.observable();
     self.points = ko.observable();
+    self.duration = ko.observable();
 
     if (data) {
         for (var i in data) {
@@ -91,6 +92,7 @@ function TestNonChapterQuestion() {
     var self = this;
     self.id = ko.observable();
     self.points = ko.observable();
+    self.duration = ko.observable();
     // This is observable of question object
     self.question = ko.observable(new Question());
 }
@@ -118,7 +120,8 @@ function Test() {
                         'id': question.test_question_id(),
                         'question': question.id,
                         'chapter': chapter.id,
-                        'points': question.points()
+                        'points': question.points(),
+                        'duration': question.duration()
                     };
                     new_chapter_questions.push(new TestChapterQuestion(data))
                 } else {
@@ -144,6 +147,7 @@ function Test() {
                         question.test_question_id = ko.observable()
                         question['is_selected'] = ko.observable();
                         question['points'] = ko.observable();
+                        question['duration'] = ko.observable();
                         // question.points.subscribe(self.update_selected_chapter_questions);
                         // question.is_selected.subscribe(self.update_selected_chapter_questions);
 
@@ -167,6 +171,7 @@ function Test() {
                     if (chapter_question.question() == question.id) {
                         question.is_selected(true);
                         question.points(chapter_question.points());
+                        question.duration(chapter_question.duration());
                         question.test_question_id(chapter_question.id())
                     }
                 })

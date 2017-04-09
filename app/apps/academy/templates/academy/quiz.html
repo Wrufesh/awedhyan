@@ -46,7 +46,7 @@
                     test_question_answer.test_question = ko.mapping.fromJS(test_question, test_question_mapping, new TestQuestion());
                     return test_question_answer
                 });
-                vm.test_question_answers(test_quiz_questions);
+                vm.test_question_answers(completed_test_qas.concat(test_question_answers));
             } else if (chapter_id ){
                 var chapter_questions = {{ chapter_questions | jsonify }};
 

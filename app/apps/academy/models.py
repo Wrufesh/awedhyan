@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_delete
@@ -153,6 +154,9 @@ class TestQuestion(models.Model):
     test = models.ForeignKey(Test, related_name='questions')
     chapter = models.ForeignKey(ChapterPage, null=True, blank=True)
     question = models.ForeignKey(Question, related_name='tests')
+    duration = models.DurationField(default=timedelta(minutes=1))
+    # todo put duration in test question entry
+    # apply duration to test question cewate
     points = models.PositiveIntegerField()
 
 pre_delete.connect(delete_non_chapter_question, sender=TestQuestion)
@@ -168,7 +172,7 @@ class TestQuestionAnswer(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='test_question_answers')
     # test = models.ForeignKey(Test, related_name='test_question_answers')
     test_question = models.ForeignKey(TestQuestion, related_name='test_question_answers')
-    true_false_answer = models.BooleanField(default=False)
+    true_false_answer = models.NullBooleanField(null=True, blank=True)
     option_answers = models.ManyToManyField(Option)
     # below two activates when question type is of essay
     essay_answer_content = RedactorField(blank=True, null=True)
