@@ -119,16 +119,10 @@ class TestCreateForm(HTML5BootstrapModelForm):
 class EssayAnswerContentForm(forms.Form):
     essay_answer_content = forms.CharField(widget=RedactorEditor(
         attrs={
-            'data-bind': 'value: essay_answer_content'
+            'data-bind': 'value: $parents[2].essay_answer_content'
         },
         redactor_options={'lang': 'en', 'focus': True},
         # upload_to='essay_answer/',
-        # allow_file_upload=True,
-        # allow_image_upload=True
+        allow_file_upload=False,
+        allow_image_upload=False
     ))
-
-
-class DurationForm(forms.Form):
-    duration = forms.DurationField(widget=forms.TextInput(attrs={
-        'data-bind': 'value: duration, disable: !$data.is_selected()'
-    }))

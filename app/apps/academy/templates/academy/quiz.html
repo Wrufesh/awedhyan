@@ -6,6 +6,7 @@
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_js %}
+
     <script>
         $(document).ready(function () {
             var test_id = {{ test_id | jsonify }};
@@ -84,6 +85,8 @@
     <script type="text/javascript" src="{% static 'public/plugins/toastr/toastr.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'public/plugins/jsutil/App.js' %}"></script>
     <script type="text/javascript" src="{% static 'public/academy/js/quiz.js' %}"></script>
+{{ essay_answer_component_form.media }}
+
 {% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" type="text/css"
@@ -123,6 +126,10 @@
                                 <!-- /ko -->
                                 <!-- ko if:type()=='TRUE/FALSE' -->
                                 <select data-bind="options: true_false_answer_choice, optionsText: 'name', optionsValue: 'id', optionsCaption:'Select Answer', value: $parents[2].true_false_answer"></select>
+                                <!-- /ko -->
+                                <!-- ko if:type()=='ESSAY' -->
+
+                                {{ essay_answer_component_form.essay_answer_content }}
                                 <!-- /ko -->
 
                             </div>
