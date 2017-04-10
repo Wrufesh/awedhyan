@@ -155,8 +155,6 @@ class TestQuestion(models.Model):
     chapter = models.ForeignKey(ChapterPage, null=True, blank=True)
     question = models.ForeignKey(Question, related_name='tests')
     duration = models.DurationField(default=timedelta(minutes=1))
-    # todo put duration in test question entry
-    # apply duration to test question cewate
     points = models.PositiveIntegerField()
 
 pre_delete.connect(delete_non_chapter_question, sender=TestQuestion)

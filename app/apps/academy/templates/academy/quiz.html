@@ -10,26 +10,26 @@
         $(document).ready(function () {
             var test_id = {{ test_id | jsonify }};
             var chapter_id = {{ chapter_id | jsonify }};
-            var vm = new Quiz();
+            vm = new Quiz();
             ko.applyBindings(vm);
             if (test_id) {
                 var test_questions = {{ test_questions | jsonify }};
                 var test_question_answers = {{ test_question_answers | jsonify }};
 
                 var test_question_mapping = {
-                        question: {
-                            update: function (options) {
-                                var t_question_mapping = {
-                                    'choices': {
-                                        create: function (options) {
-                                            return ko.mapping.fromJS(options.data, {}, new Choice());
-                                        }
+                    question: {
+                        update: function (options) {
+                            var t_question_mapping = {
+                                'choices': {
+                                    create: function (options) {
+                                        return ko.mapping.fromJS(options.data, {}, new Choice());
                                     }
-                                };
-                                return ko.mapping.fromJS(options.data, t_question_mapping, new Question())
-                            }
+                                }
+                            };
+                            return ko.mapping.fromJS(options.data, t_question_mapping, new Question())
                         }
-                    };
+                    }
+                };
                 var completed_test_qas = ko.utils.arrayMap(test_question_answers, function (completed_test_qa) {
                     var tq_mapping = {
                         'test_question': {
@@ -38,21 +38,21 @@
                             }
                         }
                     };
-                return ko.mapping.fromJS(completed_test_qa, tq_mapping, new TestQuestionAnswer())
+                    return ko.mapping.fromJS(completed_test_qa, tq_mapping, new TestQuestionAnswer())
                 });
 
                 var test_quiz_questions = ko.utils.arrayMap(test_questions, function (test_question) {
                     var test_question_answer = new TestQuestionAnswer();
-                    test_question_answer.test_question = ko.mapping.fromJS(test_question, test_question_mapping, new TestQuestion());
+                    test_question_answer.test_question(ko.mapping.fromJS(test_question, test_question_mapping, new TestQuestion()));
                     return test_question_answer
                 });
                 vm.test_question_answers(completed_test_qas.concat(test_question_answers));
-            } else if (chapter_id ){
+            } else if (chapter_id) {
                 var chapter_questions = {{ chapter_questions | jsonify }};
 
                 var chapter_quiz_questions = ko.utils.arrayMap(chapter_questions, function (chapter_question) {
                     var test_question_answer = new TestQuestionAnswer();
-                    test_question_answer.test_question = new TestQuestion();
+                    test_question_answer.test_question(new TestQuestion());
                     var ch_question_mapping = {
                         'choices': {
                             create: function (options) {
@@ -60,9 +60,10 @@
                             }
                         }
                     };
-                    test_question_answer.test_question.question = ko.mapping.fromJS(chapter_question, ch_question_mapping, new Question());
-                    test_question_answer.test_question.points(1);
-                    test_question_answer.test_question.student({{ student_id | jsonify }});
+                    test_question_answer.test_question().question(ko.mapping.fromJS(chapter_question, ch_question_mapping, new Question()));
+                    test_question_answer.test_question().points(1);
+                    test_question_answer.test_question().duration(null);
+                    test_question_answer.student({{ student_id | jsonify }});
                     return test_question_answer;
                 });
                 vm.test_question_answers(chapter_quiz_questions);
@@ -94,23 +95,42 @@
 {% endblock %}
 
 {% block content %}
-
-    <div id="carouselExampleControls" class="carousel slide">
-        <div class="carousel-inner" role="listbox">
-            <div class="carousel-item active">
-                <div class="card-block">
-                    {#                    TODO this is quiz info#}
-                    <h1>This is quiz description</h1>
-                </div>
-            </div>
-            <!-- ko foreach: quiz_questions -->
-            <div class="carousel-item">
-                <img class="d-block img-fluid" src="..." alt="Second slide">
-            </div>
-            <!-- /ko -->
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-outline-primary  rounded-0"
+                    data-bind="click: previous_question">{% trans 'Previous Question' %}</button>
+            <button class="btn btn-outline-primary rounded-0"
+                    data-bind="click: next_question">{% trans 'Next Question' %}</button>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+                <div class="carousel-inner" role="listbox">
+                    <div class="carousel-item active">
+                        <div class="card-block">
+                            {#                    TODO this is quiz info#}
+                            <h1>This is quiz description</h1>
+                        </div>
+                    </div>
+                    <!-- ko foreach: test_question_answers -->
+                    <div class="carousel-item" data-bind="with: test_question">
+                        <div>
+                            <div data-bind="with: question">
+                                <p class="text-justify" data-bind="text: detail"></p>
+                                <!-- ko if:type()=='OBJECTIVE' -->
+                                <select data-bind="options: choices, optionsText: 'detail', optionsValue: 'id', selectdOptions: $parents[2].option_answers, optionsCaption:'Select the correct answers'" multiple="true"></select>
+                                <!-- /ko -->
+                                <!-- ko if:type()=='TRUE/FALSE' -->
+                                <select data-bind="options: true_false_answer_choice, optionsText: 'name', optionsValue: 'id', optionsCaption:'Select Answer', value: $parents[2].true_false_answer"></select>
+                                <!-- /ko -->
 
-
-
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
