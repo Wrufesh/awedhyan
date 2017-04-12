@@ -3,8 +3,8 @@
 
 {% block page-title %}{% trans 'Board Or University' %}{% endblock %}
 
-{% block header-buttons %}
-<a href="{% url 'aadhyan:programlevel_add' %}" class="btn btn-default pull-right">{% trans 'Add' %} {% trans 'Board' %}</a>
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">{% trans 'Program Level List' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +19,7 @@
 
         <table class="table table-striped table-bordered">
             <thead>
-            <th>{% trans 'Board Name' %}</th>
+            <th>{% trans 'Board Name' %}<a href="{% url 'aadhyan:programlevel_add' %}" class="btn btn-default float-right">{% trans 'Add' %} {% trans 'Board' %}</a></th>
 
             {% comment %}
                 <th>{% anchor name _('Board Name') %}</th>

@@ -29,6 +29,12 @@
 {% block header %}
     {% include 'partials/_header.html' %}
 {% endblock %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+
+    {% block breadcrumbs %}
+    {% endblock %}
+</ol>
 <div class="{% block container_parent_class %}{% endblock %}">
     <div id="content" class="">
         {% block content %}{% endblock %}

@@ -4,8 +4,8 @@
 {% block page-title %}{{ scenario }} {{ form.instance }}{% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url 'aadhyan:institute_list' %}">{% trans 'Boards' %}</a></li>
-    <li>{{ scenario }} {{ form.instance }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'aadhyan:institute_list' %}">{% trans 'Institutes' %}</a></li>
+    <li class="breadcrumb-item">{{ scenario }} {% trans 'Institute' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
 
         {{ form.as_p }}
 
-        <input type="submit" class='btn btn-default' value="{% trans 'Save' %}">
+        <input type="submit" class='btn btn-success' value="{% trans 'Save' %}">
 
         {% if form.instance.id %}
             <a href="{% url 'aadhyan:institute_delete' form.instance.id %}" class="btn btn-danger">{% trans 'Delete' %}</a>

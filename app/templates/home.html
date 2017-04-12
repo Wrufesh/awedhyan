@@ -25,17 +25,16 @@
             <a class="list-group-item" href="{% url 'aadhyan:programlevel_list' %}"><i class="fa fa-bandcamp fa-5x"
                                                                                        aria-hidden="true"></i>&nbsp;{% trans "Program" %}
             </a>
-            <a class="list-group-item" href="{% url 'user_add' %}"><i class="fa fa-user-plus fa-5x"
+            <a class="list-group-item" href="{% url 'user_list' %}"><i class="fa fa-users fa-5x"
                                                                       aria-hidden="true"></i>
-                &nbsp;{% trans "Add Institute Admin" %}</a>
+                &nbsp;{% trans "Institute Admin Users" %}</a>
             {#    End SuperUser links only#}
         {% endif %}
     {% if 'Institute Admin' in request.user.groups.all %}
         {#Institite superusers links#}
-        <a class="list-group-item" href="{% url 'user_add' %}"><i class="fa fa-user-plus fa-5x" aria-hidden="true"></i>&nbsp;{% trans "Add Institute Student" %}
-        </a>
-        <a class="list-group-item" href="{% url 'user_add' %}"><i class="fa fa-user-plus fa-5x" aria-hidden="true"></i>&nbsp;{% trans "Add Institute Instructor" %}
-        </a>
+        <a class="list-group-item" href="{% url 'user_list' %}"><i class="fa fa-users fa-5x"
+                                                                      aria-hidden="true"></i>
+                &nbsp;{% trans "Institute Users" %}</a>
         {#    end institute superuser links#}
     {% endif %}
     {% if 'Student' in request.user.groups.all or 'Instructor' in request.user.groups.all %}
