@@ -35,10 +35,10 @@ urlpatterns = [
     url(r'^course/update/(?P<pk>[0-9]+)/$', CourseEdit.as_view(), name='course_edit'),
     url(r'^course/delete/(?P<pk>[0-9]+)/$', CourseDelete.as_view(), name='course_delete'),
     # CRUD Institute User
-    url(r'^institute/user/list/$', InstituteUserList.as_view(), name='instituteuser_list'),
-    url(r'^institute/user/create/$', InstituteUserCreate.as_view(), name='instituteuser_add'),
-    url(r'^institute/user/update/(?P<pk>[0-9]+)/$', InstituteUserEdit.as_view(), name='instituteuser_edit'),
-    url(r'^institute/user/delete/(?P<pk>[0-9]+)/$', InstituteUserDelete.as_view(), name='instituteuser_delete'),
+    # url(r'^institute/user/list/$', InstituteUserList.as_view(), name='instituteuser_list'),
+    # url(r'^institute/user/create/$', InstituteUserCreate.as_view(), name='instituteuser_add'),
+    # url(r'^institute/user/update/(?P<pk>[0-9]+)/$', InstituteUserEdit.as_view(), name='instituteuser_edit'),
+    # url(r'^institute/user/delete/(?P<pk>[0-9]+)/$', InstituteUserDelete.as_view(), name='instituteuser_delete'),
     # CRUD Chapter
     url(r'^chapter/list/(?P<course_id>[0-9]+)/$', ChapterList.as_view(), name='chapter_list'),
     url(r'^chapter/create/(?P<course_id>[0-9]+)/$', ChapterCreate.as_view(), name='chapter_add'),

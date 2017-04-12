@@ -159,27 +159,27 @@ class CourseDelete(CourseView, DeleteView):
     pass
 
 
-# TODO all methods should be processed according to active institute of institute admin
-class InstituteUserView(LoginRequiredMixin):
-    model = User
-    success_url = reverse_lazy('aadhyan:instituteuser_list')
-    form_class = InstituteUserForm
-
-
-class InstituteUserList(InstituteUserView, ListView):
-    pass
-
-
-class InstituteUserCreate(InstituteUserView, CreateView):
-    pass
-
-
-class InstituteUserEdit(InstituteUserView, UpdateView):
-    pass
-
-
-class InstituteUserDelete(InstituteUserView, DeleteView):
-    pass
+# # TODO all methods should be processed according to active institute of institute admin
+# class InstituteUserView(LoginRequiredMixin):
+#     model = User
+#     success_url = reverse_lazy('aadhyan:instituteuser_list')
+#     form_class = InstituteUserForm
+#
+#
+# class InstituteUserList(InstituteUserView, ListView):
+#     pass
+#
+#
+# class InstituteUserCreate(InstituteUserView, CreateView):
+#     pass
+#
+#
+# class InstituteUserEdit(InstituteUserView, UpdateView):
+#     pass
+#
+#
+# class InstituteUserDelete(InstituteUserView, DeleteView):
+#     pass
 
 
 class ChapterView(LoginRequiredMixin):

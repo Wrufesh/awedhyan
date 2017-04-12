@@ -8,3 +8,7 @@ class User(AbstractUser):
     # follow field only populates when user is student
     program_level = models.ForeignKey(ProgramLevel, on_delete=models.CASCADE, blank=True, null=True)
     # pass
+
+    @property
+    def groups_name(self):
+        return [obj.name for obj in self.groups.all()]

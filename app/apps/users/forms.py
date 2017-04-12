@@ -55,17 +55,17 @@ class InstituteUserForm(HTML5BootstrapModelForm):
     # def save(self):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('username', 'first_name', 'last_name', 'email', 'groups')
 
 
-class UserForm(HTML5BootstrapModelForm):
+class InstituteAdminUserForm(HTML5BootstrapModelForm):
     # pass
     # TODO save admin institute as view with this form can only be used by Institute Admin
     # def save(self):
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('username', 'first_name', 'last_name', 'email', 'institute')
 
 
 
