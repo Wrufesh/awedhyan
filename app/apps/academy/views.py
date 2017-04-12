@@ -453,7 +453,7 @@ class QuizView(TemplateView, LoginRequiredMixin, GroupRequiredMixin):
             context['test_obj'] = test
         elif chapter_id:
             chapter_obj = ChapterPage.objects.get(id=chapter_id)
-            chapter_questions = chapter_obj.questions.all()
+            chapter_questions = chapter_obj.questions.all().filter(type__in=['TRUE/FALSE', 'OBJECTIVE'])
             chapter_question_serializer = QuestionSerializer(chapter_questions, many=True)
             context['chapter_questions'] = chapter_question_serializer.data
             context['chapter_name'] = chapter_obj.name

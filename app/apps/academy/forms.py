@@ -119,7 +119,8 @@ class TestCreateForm(HTML5BootstrapModelForm):
 class EssayAnswerContentForm(forms.Form):
     essay_answer_content = forms.CharField(widget=RedactorEditor(
         attrs={
-            'data-bind': 'value: $parents[2].essay_answer_content'
+            'data-bind': 'value: $parents[2].essay_answer_content',
+            'width': '100'
         },
         redactor_options={'lang': 'en', 'focus': True},
         # upload_to='essay_answer/',

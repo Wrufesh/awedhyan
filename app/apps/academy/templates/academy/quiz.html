@@ -85,7 +85,7 @@
     <script type="text/javascript" src="{% static 'public/plugins/toastr/toastr.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'public/plugins/jsutil/App.js' %}"></script>
     <script type="text/javascript" src="{% static 'public/academy/js/quiz.js' %}"></script>
-{{ essay_answer_component_form.media }}
+    {{ essay_answer_component_form.media }}
 
 {% endblock %}
 {% block extra_css %}
@@ -100,44 +100,67 @@
 {% block content %}
     <div class="row">
         <div class="col-12">
-            <button class="btn btn-outline-primary  rounded-0"
-                    data-bind="click: previous_question">{% trans 'Previous Question' %}</button>
-            <button class="btn btn-outline-primary rounded-0"
-                    data-bind="click: next_question">{% trans 'Next Question' %}</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
             <div id="carouselExampleControls" class="carousel slide" data-interval="false">
                 <div class="carousel-inner" role="listbox">
-                    <div class="carousel-item active">
-                        <div class="card-block">
+                    <div class="carousel-item card text-center active">
+                        <div class="card-block quiz-box bg-slight-white">
                             {#                    TODO this is quiz info#}
                             <h1>This is quiz description</h1>
                         </div>
                     </div>
                     <!-- ko foreach: test_question_answers -->
-                    <div class="carousel-item" data-bind="with: test_question">
-                        <div>
+                    <div class="carousel-item card text-center" data-bind="with: test_question">
+                        <div class="quiz-box">
                             <div data-bind="with: question">
-                                <p class="text-justify" data-bind="text: detail"></p>
-                                <!-- ko if:type()=='OBJECTIVE' -->
-                                <select data-bind="options: choices, optionsText: 'detail', optionsValue: 'id', selectdOptions: $parents[2].option_answers, optionsCaption:'Select the correct answers'" multiple="true"></select>
+                                <div class="py-2">
+                                    <h4 class="" data-bind="text: detail"></h4>
+                                </div>
+                                <!-- ko if:image() -->
+                                <img class="d-block img-fluid"  data-bind="attr: { src: image }" alt="Question Image">
                                 <!-- /ko -->
-                                <!-- ko if:type()=='TRUE/FALSE' -->
-                                <select data-bind="options: true_false_answer_choice, optionsText: 'name', optionsValue: 'id', optionsCaption:'Select Answer', value: $parents[2].true_false_answer"></select>
-                                <!-- /ko -->
-                                <!-- ko if:type()=='ESSAY' -->
+                                <div class="card-block bg-slight-white">
+                                    <!-- ko if:type()=='OBJECTIVE' -->
+                                    <!-- ko foreach:choices -->
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                               data-bind="attr: { value: id }, checked: $parents[2].option_answers">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description" data-bind="text: detail"></span>
+                                    </label>
+                                    <!-- /ko -->
 
-                                {{ essay_answer_component_form.essay_answer_content }}
-                                <!-- /ko -->
+                                    <!-- /ko -->
+                                    <!-- ko if:type()=='TRUE/FALSE' -->
+                                    <!-- ko foreach:true_false_answer_choice -->
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="radio" class="custom-control-input"
+                                               data-bind="attr: { value: id }, checked: $parents[2].true_false_answer">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description" data-bind="text: name"></span>
+                                    </label>
+                                    <!-- /ko -->
+                                    <!-- /ko -->
+                                    <!-- ko if:type()=='ESSAY' -->
+                                    {{ essay_answer_component_form.essay_answer_content.label }}
+                                    {{ essay_answer_component_form.essay_answer_content }}
+                                    <!-- /ko -->
 
+                                </div>
                             </div>
                         </div>
                     </div>
                     <!-- /ko -->
                 </div>
+                <a class="carousel-control-prev" role="button" data-slide="prev" data-bind="click: previous_question">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" role="button" data-slide="next" data-bind="click: next_question">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
             </div>
         </div>
+
     </div>
 {% endblock %}

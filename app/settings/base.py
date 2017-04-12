@@ -153,7 +153,7 @@ REDACTOR_OPTIONS = {
         'alignment',
         # 'fontsize',
         'fontcolor',
-        'source',
+        # 'source',
         'fullscreen'
     ],
     'imageResizable': True,

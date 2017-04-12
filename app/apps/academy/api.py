@@ -36,3 +36,6 @@ class CourseChapterPageViewset(viewsets.ModelViewSet):
             queryset = queryset.filter(course__id=course_id)
         return queryset
 
+
+class TestQuestionAnswerViewset():
+    pass

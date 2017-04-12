@@ -48,6 +48,29 @@ function TestQuestionAnswer() {
     self.essay_answer_content = ko.observable();
     self.points = ko.observable();
 
+    self.submit = function () {
+        var defaultCallback = function (response) {
+            if (response.success) {
+                App.hideProcessing();
+                App.notifyUser('Succesfully Saved', 'success');
+                windows.location = '/academy/test/list';
+            }
+        };
+        var failureCallback = function (err) {
+            var err_message = err.responseJSON.detail;
+            var error = App.notifyUser(
+                err_message,
+                'error'
+            );
+            App.hideProcessing();
+        };
+        if (!test_question().id()) {
+            App.remotePost(url, data, defaultCallback, failureCallback)
+        } else {
+            console.log('this is chapter question')
+        }
+    }
+
 }
 
 
@@ -57,7 +80,7 @@ function Quiz() {
 
     self.previous_question = function () {
         $('.carousel').carousel('prev')
-    }
+    };
     self.next_question = function () {
         $('.carousel').carousel('next')
     }
