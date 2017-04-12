@@ -27,12 +27,15 @@ from app.apps.users import urls as users_urls
 
 from rest_framework.routers import DefaultRouter
 
+from app.views import HomeView
+
 router = DefaultRouter()
 # router.register(r'chapterquestion', ChapterQuestionViewSet, base_name='chapterquestion')
 router.register(r'coursechapters', CourseChapterPageViewset, base_name='coursechapters')
 # router.register(r'test', TestViewset, base_name='test')
 
 urlpatterns = [
+    url(r'^$', HomeView.as_view(), name='home'),
     url(r'^admin/', admin.site.urls),
     # TODO below namespace='aadhyan' to namespace='academy' and all 'aadhan' namespace used
     url(r'^academy/', include(academy_urls, namespace='aadhyan')),

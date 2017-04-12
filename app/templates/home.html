@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page-title %}{{ scenario }} {{ form.instance }}{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+    <h1>This is homepage</h1>
+
+    {#    SuperUser links only#}
+    <a href="{% url 'aadhyan:institute_list' %}">{% trans "Institute" %}</a>
+    <a href="{% url 'aadhyan:board_list' %}">{% trans "Board Or University" %}</a>
+    <a href="{% url 'aadhyan:faculty_list' %}">{% trans "Faculties" %}</a>
+    <a href="{% url 'aadhyan:program_list' %}">{% trans "Program Level" %}</a>
+    <a href="{% url 'aadhyan:programlevel_list' %}">{% trans "Program" %}</a>
+    <a href="{% url 'user_add' %}">{% trans "Add Institute Admin" %}</a>
+    {#    End SuperUser links only#}
+
+    {#Institite superusers links#}
+    <a href="{% url 'user_add' %}">{% trans "Add Institute Student" %}</a>
+    <a href="{% url 'user_add' %}">{% trans "Add Institute Instructor" %}</a>
+    {#    end institute superuser links#}
+
+    {#    Institute Admin, Instructor, Student  Links#}
+    <a href="{% url 'aadhyan:course_list' %}">{% trans "Courses" %}</a>
+    <a href="{% url 'aadhyan:test_list' %}">{% trans "Tests" %}</a>
+    {#    End Institute Instructor Links#}
+{% endblock %}

@@ -49,7 +49,7 @@ urlpatterns = [
     url(r'^chapterquestions/add/(?P<chapter_id>[0-9]+)/$', ChapterQuestion.as_view(), name='chapterquestions_add'),
 
     # Create Test
-    url(r'^test/list/$', TestListView.as_view(), name='test_add'),
+    url(r'^test/list/$', TestListView.as_view(), name='test_list'),
     url(r'^test/create/$', TestCreateEditView.as_view(), name='test_add'),
     url(r'^test/update/(?P<test_id>[0-9]+)/$', TestCreateEditView.as_view(), name='test_edit'),
     url(r'^test/delete/(?P<test_id>[0-9]+)/$', TestDeleteView.as_view(), name='test_delete'),
