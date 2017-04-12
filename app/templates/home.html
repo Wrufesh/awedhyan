@@ -8,27 +8,37 @@
 
 {% block content %}
     <div class="list-group">
-        {#    SuperUser links only#}
-        <a class="list-group-item" href="{% url 'aadhyan:institute_list' %}"><i class="fa fa-university fa-5x"
-                                                                                aria-hidden="true"></i>&nbsp;{% trans "Institute" %}
-        </a>
-        <a class="list-group-item" href="{% url 'aadhyan:board_list' %}"><i class="fa fa-university fa-5x"
-                                                                            aria-hidden="true"></i>&nbsp;{% trans "Board Or University" %}
-        </a>
-        <a class="list-group-item" href="{% url 'aadhyan:faculty_list' %}"><i class="fa fa-bandcamp fa-5x" aria-hidden="true"></i>&nbsp;{% trans "Faculties" %}</a>
-        <a class="list-group-item" href="{% url 'aadhyan:program_list' %}"><i class="fa fa-level-up fa-5x" aria-hidden="true"></i>&nbsp;{% trans "Program Level" %}</a>
-        <a class="list-group-item" href="{% url 'aadhyan:programlevel_list' %}"><i class="fa fa-bandcamp fa-5x" aria-hidden="true"></i>&nbsp;{% trans "Program" %}</a>
-        <a class="list-group-item" href="{% url 'user_add' %}"><i class="fa fa-user-plus fa-5x" aria-hidden="true"></i>
-            &nbsp;{% trans "Add Institute Admin" %}</a>
-        {#    End SuperUser links only#}
-
+        {% if request.user.is_superuser %}
+            {#    SuperUser links only#}
+            <a class="list-group-item" href="{% url 'aadhyan:institute_list' %}"><i class="fa fa-university fa-5x"
+                                                                                    aria-hidden="true"></i>&nbsp;{% trans "Institute" %}
+            </a>
+            <a class="list-group-item" href="{% url 'aadhyan:board_list' %}"><i class="fa fa-university fa-5x"
+                                                                                aria-hidden="true"></i>&nbsp;{% trans "Board Or University" %}
+            </a>
+            <a class="list-group-item" href="{% url 'aadhyan:faculty_list' %}"><i class="fa fa-bandcamp fa-5x"
+                                                                                  aria-hidden="true"></i>&nbsp;{% trans "Faculties" %}
+            </a>
+            <a class="list-group-item" href="{% url 'aadhyan:program_list' %}"><i class="fa fa-level-up fa-5x"
+                                                                                  aria-hidden="true"></i>&nbsp;{% trans "Program Level" %}
+            </a>
+            <a class="list-group-item" href="{% url 'aadhyan:programlevel_list' %}"><i class="fa fa-bandcamp fa-5x"
+                                                                                       aria-hidden="true"></i>&nbsp;{% trans "Program" %}
+            </a>
+            <a class="list-group-item" href="{% url 'user_add' %}"><i class="fa fa-user-plus fa-5x"
+                                                                      aria-hidden="true"></i>
+                &nbsp;{% trans "Add Institute Admin" %}</a>
+            {#    End SuperUser links only#}
+        {% endif %}
+    {% if 'Institute Admin' in request.user.groups.all %}
         {#Institite superusers links#}
         <a class="list-group-item" href="{% url 'user_add' %}"><i class="fa fa-user-plus fa-5x" aria-hidden="true"></i>&nbsp;{% trans "Add Institute Student" %}
         </a>
         <a class="list-group-item" href="{% url 'user_add' %}"><i class="fa fa-user-plus fa-5x" aria-hidden="true"></i>&nbsp;{% trans "Add Institute Instructor" %}
         </a>
         {#    end institute superuser links#}
-
+    {% endif %}
+    {% if 'Student' in request.user.groups.all or 'Instructor' in request.user.groups.all %}
         {#    Institute Admin, Instructor, Student  Links#}
         <a class="list-group-item" href="{% url 'aadhyan:course_list' %}"><i class="fa fa-book fa-5x"
                                                                              aria-hidden="true"></i>
@@ -37,5 +47,6 @@
                                                                            aria-hidden="true"></i>&nbsp;{% trans "Tests" %}
         </a>
         {#    End Institute Instructor Links#}
+    {% endif %}
     </div>
 {% endblock %}
