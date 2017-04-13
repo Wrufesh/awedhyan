@@ -55,7 +55,7 @@ class InstituteUserForm(HTML5BootstrapModelForm):
     # def save(self):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'groups')
+        fields = ('username', 'password','first_name', 'last_name', 'email', 'groups')
 
 
 class InstituteAdminUserForm(HTML5BootstrapModelForm):
@@ -65,7 +65,7 @@ class InstituteAdminUserForm(HTML5BootstrapModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'institute')
+        fields = ('username', 'password','first_name', 'last_name', 'email', 'institute')
 
 
 
