@@ -1,0 +1,6 @@
+Django
+django-braces
+django-el-pagination
+django-wysiwyg-redactor
+djangorestframework
+Pillow
