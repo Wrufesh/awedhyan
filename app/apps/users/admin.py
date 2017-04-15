@@ -1,11 +1,11 @@
+from django.conf.urls import url
 from django.contrib import admin
-
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-
+from django.utils.translation import ugettext as _
 from .models import User
 
 
@@ -17,7 +17,10 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'institute', 'program_level', 'groups')
+        fields = (
+            'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_superuser', 'is_active', 'institute',
+            'program_level', 'groups')
+        # fields = '__all__'
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -41,11 +44,16 @@ class UserChangeForm(forms.ModelForm):
     the user, but replaces the password field with admin's
     password hash display field.
     """
-    password = ReadOnlyPasswordHashField()
+    password = ReadOnlyPasswordHashField(label=_("Password"),
+                                         help_text=("Raw passwords are not stored, so there is no way to see "
+                                                    "this user's password, but you can change the password "
+                                                    "using <a href=\"password/\">this form</a>."))
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'is_active', 'institute', 'program_level')
+        fields = (
+            'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'is_superuser', 'institute',
+            'program_level', 'groups')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -62,21 +70,35 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email',)
+    list_display = ('username', 'email')
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (_('User Information'),
+         {'classes': ('wide',), 'fields': (
+             'username', 'password', 'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'is_superuser')}),
+        (_('Institute Information'), {'classes': ('wide',), 'fields': ('institute', 'program_level', 'groups')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2')}
-        ),
+        (_('User Information'),
+         {'classes': ('wide',), 'fields': (
+             'username', 'password1', 'password2', 'first_name', 'last_name', 'email', 'is_staff', 'is_active',
+             'is_superuser')}),
+        (_('Institute Information'), {'classes': ('wide',), 'fields': ('institute', 'program_level', 'groups')}),
     )
-    search_fields = ('email',)
-    ordering = ('email',)
+    search_fields = ('username',)
+    ordering = ('date_joined',)
     filter_horizontal = ()
+
+    def get_urls(self):
+        return [
+                   url(
+                       r'^(.+)/change/password/$',
+                       self.admin_site.admin_view(self.user_change_password),
+                       name='auth_user_password_change',
+                   ),
+               ] + super(UserAdmin, self).get_urls()
+
 
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
