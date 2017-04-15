@@ -4,3 +4,5 @@ django-el-pagination==3.0.1
 django-wysiwyg-redactor==0.5.1
 djangorestframework==3.6.2
 Pillow==4.1.0
+
+webstack-django-sorting-1.0.1

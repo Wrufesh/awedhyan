@@ -3,4 +3,5 @@ django-braces
 django-el-pagination
 django-wysiwyg-redactor
 djangorestframework
+webstack_django_sorting
 Pillow
